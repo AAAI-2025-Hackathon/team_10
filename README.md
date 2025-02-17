@@ -16,3 +16,12 @@
 
 </pre>
 
+# Data downloading
+
+You can download the dataset by executing the ds005602-1.0.0.sh script from OpenNeuro git bash or any other tool for executing bash scripts:
+
+When using VSCode you can open a new Terminal and select the arrow next to the "+" sign on the bottom right corner of the terminal UI in VSCode and select "Git bash" where you can just type the following command to download the dataset.
+
+```
+sh ds005602-1.0.0.sh
+```
