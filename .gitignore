@@ -2,3 +2,5 @@
 /masks/
 /.venv/
 /venv/
+/freesurfer_orig/
+**/__pycache__/
