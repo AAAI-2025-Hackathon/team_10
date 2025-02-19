@@ -76,8 +76,6 @@ class MainWindow(QMainWindow):
         QSvgRenderer("epilepsydetection/resources/MN_logo.svg").render(logoPainter)
         self.ui.logoMN.setPixmap(logoPixMap)
         logoPainter.end()
-        if self.array_3d is not None:
-            self.get_plotter()
 
 
     def load_array(self, array):
@@ -133,27 +131,9 @@ class MainWindow(QMainWindow):
                 nifti_img = nib.load(file_path).get_fdata()
                 print(f"Selected file: {file_path}")
                 self.load_array(nifti_img)
-                self.get_plotter(nifti_img)
             except Exception as e:
                 print(f"Error loading file: {e}")
 
-    def get_plotter(self, nifti_data):
-        brain_data = nifti_data
-        mask_data = nifti_data
-
-        # brain_data[:, :, 133:] = 0 # adjust slice to be plotted
-        nifti_data = brain_data + mask_data*200
-        print(f"Shape of the 3D numpy array: {nifti_data.shape}")
-
-        grid = pv.ImageData()
-        grid.dimensions = np.array(nifti_data.shape) + 1
-        grid.origin = (0, 0, 0)  # The bottom left corner of the data set
-        grid.spacing = (0.9, 0.9, 0.9)  # Cell sizes along each axis
-        grid.cell_data["values"] = nifti_data.flatten(order="F") # Assign the data to the cell data
-
-        # Create a plot
-        self.three_D_plotter.add_volume(grid, cmap="viridis")
-        self.three_D_plotter.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # Create the application
