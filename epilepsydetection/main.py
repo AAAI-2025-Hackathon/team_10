@@ -4,9 +4,9 @@ import pyvista as pv
 import pyvistaqt as pvqt
 import sys
 from epilepsydetection import Ui_MainWindow
-from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QFileDialog, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QFileDialog, QPushButton, QLabel
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtGui import QPainter, QPixmap
+from PySide6.QtGui import QPainter, QPixmap, QImage
 from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
 import nibabel as nib
@@ -25,25 +25,27 @@ class MainWindow(QMainWindow):
         self.ui.uploadButton = QPushButton("Upload File")
         self.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
         self.ui.setupUi(self)  # Set up the UI from the generated file
-        self.customUiSetup()
         self.setWindowTitle(WINDOW_TITLE)
-        
-        # Initialize array attribute (replace with your actual array)
         self.array_3d = None
         
-        # Add upload button
+        # Link upload button to upload_file method
         self.ui.uploadButton.clicked.connect(self.upload_file)
-        
-        # Add slider setup
+        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.uploadButton)
+
+        self.ui.image_label = QLabel()
+        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.image_label)
+        self.three_D_plotter = pvqt.QtInteractor(self)
+        self.ui.horizontalLayout_1.addWidget(self.three_D_plotter.interactor)
+
+        # Slider setup
         self.slice_slider = QSlider(Qt.Horizontal, self)
         self.slice_slider.setMinimum(0)
-        self.slice_slider.setMaximum(0)  # Will be updated when array is loaded
+        self.slice_slider.setMaximum(0)
         self.slice_slider.setValue(0)
-        self.slice_slider.valueChanged.connect(self.update_slice)
-        
-        # Add slider to the main window
+        self.slice_slider.valueChanged.connect(self.update_2d_slice)
         self.ui.tabWidget.widget(0).layout().addWidget(self.slice_slider)
-        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.uploadButton)
+
+        self.customUiSetup()
 
     def resizeEvent(self, event):
         self.resizeTabWidget()
@@ -71,25 +73,51 @@ class MainWindow(QMainWindow):
         logoPixMap = QPixmap(QSize(162, 44))
         logoPixMap.fill(Qt.transparent)
         logoPainter = QPainter(logoPixMap)
-        QSvgRenderer("resources/MN_logo.svg").render(logoPainter)
+        QSvgRenderer("epilepsydetection/resources/MN_logo.svg").render(logoPainter)
         self.ui.logoMN.setPixmap(logoPixMap)
         logoPainter.end()
-        self.get_plotter(SAMPLE_NUMBER)
+        if self.array_3d is not None:
+            self.get_plotter()
+
 
     def load_array(self, array):
         """Load a new 3D array and update slider range."""
         self.array_3d = array
         if array is not None:
             self.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
-            self.update_slice(0)  # Show initial slice
+            self.update_2d_slice(0)  # Show initial slice
+            self.update_3d_model()
 
-    def update_slice(self, value):
+    def update_2d_slice(self, value):
         """Update display with the selected slice."""
         if self.array_3d is not None:
             current_slice = self.array_3d[:, :, value]
             # Update your display here with current_slice
-            # Example: self.ui.image_label.setPixmap(array_to_pixmap(current_slice))
+            self.ui.image_label.setPixmap(self.array_to_pixmap(current_slice))
             print(f"Showing slice {value} with shape {current_slice.shape}")
+
+    def update_3d_model(self):
+        if self.array_3d is not None:
+            model_data = self.array_3d
+            self.three_D_plotter.clear()
+            self.three_D_plotter.add_volume(model_data, cmap="viridis")
+
+    def array_to_pixmap(self, array_slice):
+        """Convert a 2D numpy array to QPixmap."""
+        array_slice = np.ascontiguousarray(array_slice)
+        normalized = ((array_slice - array_slice.min()) * 255 / 
+                     (array_slice.max() - array_slice.min())).astype(np.uint8)
+        
+        height, width = normalized.shape
+        bytes_per_line = width
+        image = QImage(normalized.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        
+        # Convert to QPixmap and scale to a reasonable size
+        pixmap = QPixmap.fromImage(image)
+        scaled_pixmap = pixmap.scaled(512, 512, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        
+        return scaled_pixmap
+
 
     def upload_file(self):
         """Open file dialog and load the selected file as a 3D array."""
@@ -105,14 +133,15 @@ class MainWindow(QMainWindow):
                 nifti_img = nib.load(file_path).get_fdata()
                 print(f"Selected file: {file_path}")
                 self.load_array(nifti_img)
+                self.get_plotter(nifti_img)
             except Exception as e:
                 print(f"Error loading file: {e}")
 
-    def get_plotter(self, sample_number: int):
-        brain_data = get_3d_nifti_data(sample_number, "raw")
-        mask_data = get_3d_nifti_data(sample_number, "mask")
+    def get_plotter(self, nifti_data):
+        brain_data = nifti_data
+        mask_data = nifti_data
 
-        brain_data[:, :, 133:] = 0 # adjust slice to be plotted
+        # brain_data[:, :, 133:] = 0 # adjust slice to be plotted
         nifti_data = brain_data + mask_data*200
         print(f"Shape of the 3D numpy array: {nifti_data.shape}")
 
@@ -123,32 +152,8 @@ class MainWindow(QMainWindow):
         grid.cell_data["values"] = nifti_data.flatten(order="F") # Assign the data to the cell data
 
         # Create a plot
-        self.three_D_plotter = pvqt.QtInteractor(self)
-        self.ui.horizontalLayout_1.addWidget(self.three_D_plotter.interactor)
         self.three_D_plotter.add_volume(grid, cmap="viridis")
         self.three_D_plotter.show()
-
-sets_templates = {
-    "ds005602": "../dataset/ds005602-1.0.0/sub-{0}/anat/sub-{0}_T1w.nii.gz",
-    "flair": "../dataset/ds005602-1.0.0/sub-{0}/anat/sub-{0}_FLAIR.nii.gz",
-    "masks_orig": "../dataset/masks/{0}/{0}_MaskInOrig.nii.gz",
-    "masks_raw": "../dataset/masks/{0}/{0}_MaskInRawData.nii.gz",
-    "orig": "../dataset/freesurfer_orig/{0}_freesurfer_orig.nii.gz"
-}
-def get_image_path(subject_id: int, set_name = "ds005602"):
-    return sets_templates[set_name].format(subject_id)
-
-def get_3d_nifti_data(sample_number: int, type: str) -> np.ndarray:
-    if type == "mask":
-        mask_file_path = rf"masks\{sample_number}\{sample_number}_MaskInOrig.nii.gz"
-        mask_file_path = get_image_path(sample_number, "masks_orig")
-        nifti_img = nib.load(mask_file_path)
-        return nifti_img.get_fdata() # get the data as a 3D numpy array
-    elif type == "raw":
-        raw_file_path = rf"freesurfer_orig\{sample_number}_freesurfer_orig.nii.gz"
-        raw_file_path = get_image_path(sample_number, "orig")
-        nifti_img = nib.load(raw_file_path)
-        return nifti_img.get_fdata() # get the data as a 3D numpy array
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # Create the application

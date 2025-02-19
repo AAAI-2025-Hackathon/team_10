@@ -1,8 +1,9 @@
 from epilepsydetection import Ui_MainWindow
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QFileDialog, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QFileDialog, QPushButton, QLabel
+from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtGui import QPainter, QPixmap
+from PySide6.QtGui import QPainter
 from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
 import numpy as np
@@ -23,23 +24,22 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)  # Set up the UI from the generated file
         self.customUiSetup()
         self.setWindowTitle(WINDOW_TITLE)
-        
-        # Initialize array attribute (replace with your actual array)
         self.array_3d = None
         
-        # Add upload button
+        # Link upload button to upload_file method
         self.ui.uploadButton.clicked.connect(self.upload_file)
-        
-        # Add slider setup
+        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.uploadButton)
+
+        self.ui.image_label = QLabel()
+        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.image_label)
+
+        # Slider setup
         self.slice_slider = QSlider(Qt.Horizontal, self)
         self.slice_slider.setMinimum(0)
-        self.slice_slider.setMaximum(0)  # Will be updated when array is loaded
+        self.slice_slider.setMaximum(0)
         self.slice_slider.setValue(0)
         self.slice_slider.valueChanged.connect(self.update_slice)
-        
-        # Add slider to the main window
         self.ui.tabWidget.widget(0).layout().addWidget(self.slice_slider)
-        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.uploadButton)
 
     def resizeEvent(self, event):
         self.resizeTabWidget()
@@ -83,8 +83,27 @@ class MainWindow(QMainWindow):
         if self.array_3d is not None:
             current_slice = self.array_3d[:, :, value]
             # Update your display here with current_slice
-            # Example: self.ui.image_label.setPixmap(array_to_pixmap(current_slice))
+            self.ui.image_label.setPixmap(self.array_to_pixmap(current_slice))
             print(f"Showing slice {value} with shape {current_slice.shape}")
+
+    def array_to_pixmap(self, array_slice):
+        """Convert a 2D numpy array to QPixmap."""
+        # Normalize the array to 0-255 range
+        array_slice = np.ascontiguousarray(array_slice)
+        normalized = ((array_slice - array_slice.min()) * 255 / 
+                     (array_slice.max() - array_slice.min())).astype(np.uint8)
+        
+        height, width = normalized.shape
+        bytes_per_line = width
+        
+        # Create QImage from numpy array
+        image = QImage(normalized.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        
+        # Convert to QPixmap and scale to a reasonable size
+        pixmap = QPixmap.fromImage(image)
+        scaled_pixmap = pixmap.scaled(512, 512, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        
+        return scaled_pixmap
 
     def upload_file(self):
         """Open file dialog and load the selected file as a 3D array."""
