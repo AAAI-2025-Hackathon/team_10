@@ -2,3 +2,5 @@ nibabel
 numpy
 pyvista
 scipy
+pyside6
+qtawesome

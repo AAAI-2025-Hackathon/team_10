@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1559</width>
+    <height>942</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1300</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* Global Styles */
+QWidget {
+    background-color: #FFFFFF; /* white background */
+    font-family: &quot;Segoe UI&quot;, sans-serif;
+    font-size: 12pt;
+    color: #333333; /* Dark gray text */
+}
+
+/* QMainWindow styling */
+QMainWindow {
+    background-color: #FFFFFF; /* White background for the main window */
+    border: none;
+}
+
+/* TabWidget Styling */
+QTabWidget::tab-bar {
+    alignment: center;
+}
+
+QTabWidget::pane {
+    border: none;
+    border-top: 1px solid #E0E0E0; /* Light gray border for the tab pane */
+    background-color: #FFFFFF; /* White background for tabs area */
+    border-radius: 0px;
+}
+
+QTabBar::tab {
+    background-color: #FFFFFF; /* White background for each tab */
+    border: none;
+    padding: 22px 40px; /* Padding for tab text */
+    color: #555555; /* Dark gray text */
+    font-size: 13pt;
+}
+
+QTabBar::tab:selected {
+    background-color: #F8F9FA; /* Light gray background for the selected tab */
+    color: #164194; /* Blue text for the active tab */
+    font-weight: bold;
+}
+
+QTabBar::tab:hover {
+    background-color: #E8EAF6; /* Subtle blue hover effect */
+    color: #164194;
+}
+
+/* General Button Styling */
+QPushButton {
+    background-color: #FFFFFF; /* White button background */
+    border: 1px solid #E0E0E0; /* Light gray border */
+    border-radius: 6px; /* Rounded corners */
+    padding: 6px 12px;
+    color: #333333; /* Dark gray text */
+}
+
+QPushButton:hover {
+    background-color: #E8EAF6; /* Subtle blue hover effect */
+    border-color: #B0B0B0; /* Slightly darker border */
+}
+
+QPushButton:pressed {
+    background-color: #DDE2F1; /* Slightly darker blue for pressed state */
+}
+
+/* Header Styling */
+QLabel#headerLabel {
+    font-size: 14pt; /* Larger font size for headers */
+    font-weight: bold;
+    color: #333333; /* Dark gray */
+}
+
+/* General Frame Styling */
+QFrame {
+    background-color: #FFFFFF; /* White background for cards or sections */
+    border: 1px solid #E0E0E0; /* Light gray border */
+    border-radius: 6px; /* Rounded corners */
+    padding: 12px;
+}
+
+
+
+/* Text Fields */
+QLineEdit, QTextEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    padding: 4px;
+    color: #333333;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border-color: #164194; /* Blue border when focused */
+}
+
+/* Footer Styling */
+QStatusBar {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E0E0E0; /* Light gray top border */
+    font-size: 10pt;
+    color: #555555; /* Slightly lighter gray text */
+}
+
+QGroupBox {
+    background-color: #F9F9F9;
+	padding: 20px;
+    border-radius: 6px;
+    font-size: 13pt;
+    margin: 35px;
+}
+
+QGroupBox::title {
+	padding: 20px;
+}
+
+QWebEngineView {
+   border-radius: 6px;
+}
+
+#tabWidget &gt; QFrame {
+	border: none;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1561</width>
+      <height>921</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab_01_view">
+     <attribute name="title">
+      <string>View</string>
+     </attribute>
+     <layout class="QHBoxLayout" name="horizontalLayout_1" stretch="0">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QWidget" name="view3dPlaceholder" native="true"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="logoMN">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>2</y>
+      <width>181</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+margin: 0px;
+padding: 0px;
+padding-top: 4px;
+border: none;
+border-right: 1px solid #858585;
+border-radius: 0px;
+}</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;gui/resources/MN_logo.png&quot; height=&quot;44&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>0</y>
+      <width>211</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+margin: 0px;
+padding: 0px;
+padding-top: 6px;
+padding-left: 6px;
+border: none;
+}</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Epilepsy detection&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
