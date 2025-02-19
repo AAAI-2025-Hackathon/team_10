@@ -162,11 +162,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_1.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.view3dPlaceholder = QWidget(self.tab_01_view)
-        self.view3dPlaceholder.setObjectName(u"view3dPlaceholder")
-
-        self.horizontalLayout.addWidget(self.view3dPlaceholder)
-
 
         self.horizontalLayout_1.addLayout(self.horizontalLayout)
 

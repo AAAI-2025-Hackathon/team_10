@@ -4,3 +4,4 @@ pyvista
 scipy
 pyside6
 qtawesome
+pyvistaqt
