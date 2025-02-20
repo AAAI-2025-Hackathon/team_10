@@ -91,6 +91,7 @@ class MainWindow(QMainWindow):
             self.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
             self.update_2d_slice(0)  # Show initial slice
             self.update_3d_model()
+            self.update_3d_slice(0)
 
     def update_2d_slice(self, value):
         """Update display with the selected slice."""
@@ -101,6 +102,7 @@ class MainWindow(QMainWindow):
             print(f"Showing slice {value} with shape {current_slice.shape}")
 
     def update_3d_model(self):
+        self.three_D_plotter.clear_plane_widgets()
         if self.array_3d is not None:
             model_data = self.array_3d
             self.three_D_plotter.clear()
@@ -113,7 +115,7 @@ class MainWindow(QMainWindow):
     def update_3d_slice(self, value):
         plane_origin = list(self.slicing_plane.GetOrigin())
         plane_origin[2] = value
-        print(plane_origin)
+        # print(plane_origin)
         self.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
         self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
