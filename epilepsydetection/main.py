@@ -23,29 +23,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
-        self.ui.uploadButton = QPushButton("Upload File")
         self.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
         self.ui.setupUi(self)  # Set up the UI from the generated file
         self.setWindowTitle(WINDOW_TITLE)
         self.array_3d = None
-        
-        # Link upload button to upload_file method
-        self.ui.uploadButton.clicked.connect(self.upload_file)
-        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.uploadButton)
-
-        self.ui.image_label = QLabel()
-        self.ui.tabWidget.widget(0).layout().addWidget(self.ui.image_label)
-        self.three_D_plotter = pvqt.QtInteractor(self)
-        self.ui.horizontalLayout_1.addWidget(self.three_D_plotter.interactor)
-
-        # Slider setup
-        self.slice_slider = QSlider(Qt.Horizontal, self)
-        self.slice_slider.setMinimum(0)
-        self.slice_slider.setMaximum(0)
-        self.slice_slider.setValue(0)
-        self.slice_slider.valueChanged.connect(self.update_2d_slice)
-        self.slice_slider.valueChanged.connect(self.update_3d_slice)
-        self.ui.tabWidget.widget(0).layout().addWidget(self.slice_slider)
 
         self.customUiSetup()
 
@@ -79,16 +60,26 @@ class MainWindow(QMainWindow):
         self.ui.logoMN.setPixmap(logoPixMap)
         logoPainter.end()
 
+        # Link upload button to upload_file method
+        self.ui.uploadButton.clicked.connect(self.upload_file)
+
+        # Slider setup
+        self.ui.slice_slider.setMinimum(0)
+        self.ui.slice_slider.setMaximum(0)
+        self.ui.slice_slider.setValue(0)
+        self.ui.slice_slider.valueChanged.connect(self.update_2d_slice)
+        self.ui.slice_slider.valueChanged.connect(self.update_3d_slice)
+
 
     def layer_changed(self, caller, ev):
-        self.slice_slider.setValue(int(caller.GetOrigin()[2]))
+        self.ui.slice_slider.setValue(int(caller.GetOrigin()[2]))
 
 
     def load_array(self, array):
         """Load a new 3D array and update slider range."""
         self.array_3d = array
         if array is not None:
-            self.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
+            self.ui.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
             self.update_2d_slice(0)  # Show initial slice
             self.update_3d_model()
             self.update_3d_slice(0)
@@ -102,13 +93,13 @@ class MainWindow(QMainWindow):
             print(f"Showing slice {value} with shape {current_slice.shape}")
 
     def update_3d_model(self):
-        self.three_D_plotter.clear_plane_widgets()
+        self.ui.three_D_plotter.clear_plane_widgets()
         if self.array_3d is not None:
             model_data = self.array_3d
-            self.three_D_plotter.clear()
-            self.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.linspace(0,30,256)) # opaque whole model
-            volume = self.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
-            self.slicing_plane = self.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0)
+            self.ui.three_D_plotter.clear()
+            self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.linspace(0,30,256)) # opaque whole model
+            volume = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
+            self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0)
             self.slicing_plane.AddObserver(vtkCommand.InteractionEvent, self.layer_changed)
 
 
@@ -116,7 +107,7 @@ class MainWindow(QMainWindow):
         plane_origin = list(self.slicing_plane.GetOrigin())
         plane_origin[2] = value
         # print(plane_origin)
-        self.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
+        self.ui.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
         self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
     def array_to_pixmap(self, array_slice):

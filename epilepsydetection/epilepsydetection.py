@@ -16,8 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLayout,
-    QMainWindow, QSizePolicy, QStatusBar, QTabWidget,
-    QWidget)
+    QMainWindow, QPushButton, QSizePolicy, QSlider,
+    QStatusBar, QTabWidget, QWidget)
+
+from pyvistaqt.plotting import QtInteractor
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -162,6 +164,30 @@ class Ui_MainWindow(object):
         self.horizontalLayout_1.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.uploadButton = QPushButton(self.tab_01_view)
+        self.uploadButton.setObjectName(u"uploadButton")
+        self.uploadButton.setCheckable(False)
+        self.uploadButton.setFlat(False)
+
+        self.horizontalLayout.addWidget(self.uploadButton)
+
+        self.image_label = QLabel(self.tab_01_view)
+        self.image_label.setObjectName(u"image_label")
+
+        self.horizontalLayout.addWidget(self.image_label)
+
+        self.three_D_plotter = QtInteractor(self.tab_01_view)
+        self.three_D_plotter.setObjectName(u"three_D_plotter")
+        self.three_D_plotter.setMinimumSize(QSize(25, 0))
+
+        self.horizontalLayout.addWidget(self.three_D_plotter)
+
+        self.slice_slider = QSlider(self.tab_01_view)
+        self.slice_slider.setObjectName(u"slice_slider")
+        self.slice_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.horizontalLayout.addWidget(self.slice_slider)
+
 
         self.horizontalLayout_1.addLayout(self.horizontalLayout)
 
@@ -202,6 +228,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Upload File", None))
+        self.image_label.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_01_view), QCoreApplication.translate("MainWindow", u"View", None))
         self.logoMN.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><img src=\"gui/resources/MN_logo.png\" height=\"44\"/></p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:18pt;\">Epilepsy detection</span></p></body></html>", None))
