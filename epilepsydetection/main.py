@@ -63,6 +63,9 @@ class MainWindow(QMainWindow):
         # Link upload button to upload_file method
         self.ui.uploadButton.clicked.connect(self.upload_file)
 
+        # Link mask upload button to upload_file method
+        self.ui.uploadMaskButton.clicked.connect(self.upload_mask)
+
         # Slider setup
         self.ui.slice_slider.setMinimum(0)
         self.ui.slice_slider.setMaximum(0)
@@ -83,18 +86,27 @@ class MainWindow(QMainWindow):
     def load_array(self, array):
         """Load a new 3D array and update slider range."""
         self.array_3d = array
+        self.mask_3d = None
         if array is not None:
             self.ui.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
             self.update_2d_slice(0)  # Show initial slice
             self.update_3d_model()
             self.update_3d_slice(0)
 
+
+    def load_mask(self, array: np.ndarray):
+        self.mask_3d = array
+        if array is None or self.array_3d is None or not self.array_3d.shape == array.shape:
+            return
+        self.update_2d_slice(self.ui.slice_slider.value())
+
     def update_2d_slice(self, value):
         """Update display with the selected slice."""
         if self.array_3d is not None:
             current_slice = self.array_3d[:, :, value]
+            current_mask_slice = self.mask_3d[:, :, value] if self.mask_3d is not None else None
             # Update your display here with current_slice
-            self.ui.image_label.setPixmap(self.array_to_pixmap(current_slice))
+            self.ui.image_label.setPixmap(self.array_to_pixmap(current_slice, current_mask_slice))
             print(f"Showing slice {value} with shape {current_slice.shape}")
 
     def update_3d_model(self):
@@ -115,15 +127,37 @@ class MainWindow(QMainWindow):
         self.ui.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
         self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
-    def array_to_pixmap(self, array_slice):
+
+    def overlay_mask(self, grayscale_image, binary_mask):
+        rgb_image = np.stack((grayscale_image,) * 3, axis=-1)
+
+        colored_mask = np.zeros_like(rgb_image)
+        colored_mask[binary_mask == 1] = [255, 0, 0]  # Red color for mask
+
+        # Blend the images
+        alpha = 0.3  # Adjust this value to change the overlay intensity
+        blended_image = (1 - alpha) * rgb_image + alpha * colored_mask
+
+        # Ensure the values are within 0-255 range and convert to uint8
+        blended_image = np.clip(blended_image, 0, 255).astype(np.uint8)
+
+        return blended_image
+
+    def array_to_pixmap(self, array_slice, mask_slice = None):
         """Convert a 2D numpy array to QPixmap."""
         array_slice = np.ascontiguousarray(array_slice)
         normalized = ((array_slice - array_slice.min()) * 255 / 
                      (array_slice.max() - array_slice.min())).astype(np.uint8)
         
         height, width = normalized.shape
-        bytes_per_line = width
-        image = QImage(normalized.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        if mask_slice is not None:
+            mask_slice = np.ascontiguousarray(mask_slice)
+            bytes_per_line = width * 3
+            normalized_with_mask = self.overlay_mask(normalized, mask_slice)
+            image = QImage(normalized_with_mask.data, width, height, bytes_per_line, QImage.Format_RGB888)
+        else:
+            bytes_per_line = width
+            image = QImage(normalized.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
         
         # Convert to QPixmap and scale to a reasonable size
         pixmap = QPixmap.fromImage(image)
@@ -132,7 +166,7 @@ class MainWindow(QMainWindow):
         return scaled_pixmap
 
 
-    def upload_file(self):
+    def upload_file(self, model_type = "mri"):
         """Open file dialog and load the selected file as a 3D array."""
         file_path, _ = QFileDialog.getOpenFileName(
             self,
@@ -145,9 +179,16 @@ class MainWindow(QMainWindow):
             try:
                 nifti_img = nib.load(file_path).get_fdata()
                 print(f"Selected file: {file_path}")
-                self.load_array(nifti_img)
+                if model_type=="mri":
+                    self.load_array(nifti_img)
+                elif model_type=="mask":
+                    self.load_mask(nifti_img)
             except Exception as e:
                 print(f"Error loading file: {e}")
+
+
+    def upload_mask(self):
+        self.upload_file(model_type="mask")
 
 
 if __name__ == "__main__":
