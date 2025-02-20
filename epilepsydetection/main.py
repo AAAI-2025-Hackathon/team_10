@@ -70,6 +70,11 @@ class MainWindow(QMainWindow):
         self.ui.slice_slider.valueChanged.connect(self.update_2d_slice)
         self.ui.slice_slider.valueChanged.connect(self.update_3d_slice)
 
+        # Set icons for buttons
+        setButtonsIcon("uploadButton", "mdi.brain", {"color": "#164194"})
+        setButtonsIcon("uploadMaskButton", "mdi.selection-ellipse", {"color": "#164194"})
+        setButtonsIcon("inferMaskButton", "mdi.head-cog", {"color": "#164194"})
+
 
     def layer_changed(self, caller, ev):
         self.ui.slice_slider.setValue(int(caller.GetOrigin()[2]))
