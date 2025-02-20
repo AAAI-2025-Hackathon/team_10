@@ -99,6 +99,8 @@ class MainWindow(QMainWindow):
         if array is None or self.array_3d is None or not self.array_3d.shape == array.shape:
             return
         self.update_2d_slice(self.ui.slice_slider.value())
+        self.update_3d_model()
+        self.update_3d_slice(self.ui.slice_slider.value())
 
     def update_2d_slice(self, value):
         """Update display with the selected slice."""
@@ -118,6 +120,8 @@ class MainWindow(QMainWindow):
             volume = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
             self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0)
             self.slicing_plane.AddObserver(vtkCommand.InteractionEvent, self.layer_changed)
+        if self.mask_3d is not None:
+            self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,30,256), show_scalar_bar = False, blending="additive")
 
 
     def update_3d_slice(self, value):
