@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLayout,
     QMainWindow, QPushButton, QSizePolicy, QSlider,
-    QStatusBar, QTabWidget, QWidget)
+    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -162,34 +162,69 @@ class Ui_MainWindow(object):
         self.horizontalLayout_1.setSpacing(6)
         self.horizontalLayout_1.setObjectName(u"horizontalLayout_1")
         self.horizontalLayout_1.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.uploadButton = QPushButton(self.tab_01_view)
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.widget_2 = QWidget(self.tab_01_view)
+        self.widget_2.setObjectName(u"widget_2")
+        self.widget_2.setMaximumSize(QSize(16777215, 60))
+        self.horizontalLayout_5 = QHBoxLayout(self.widget_2)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.uploadButton = QPushButton(self.widget_2)
         self.uploadButton.setObjectName(u"uploadButton")
         self.uploadButton.setCheckable(False)
         self.uploadButton.setFlat(False)
 
-        self.horizontalLayout.addWidget(self.uploadButton)
+        self.horizontalLayout_4.addWidget(self.uploadButton)
 
-        self.image_label = QLabel(self.tab_01_view)
+        self.uploadMaskButton = QPushButton(self.widget_2)
+        self.uploadMaskButton.setObjectName(u"uploadMaskButton")
+
+        self.horizontalLayout_4.addWidget(self.uploadMaskButton)
+
+        self.inferMaskButton = QPushButton(self.widget_2)
+        self.inferMaskButton.setObjectName(u"inferMaskButton")
+
+        self.horizontalLayout_4.addWidget(self.inferMaskButton)
+
+
+        self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
+
+
+        self.verticalLayout.addWidget(self.widget_2)
+
+        self.widget = QWidget(self.tab_01_view)
+        self.widget.setObjectName(u"widget")
+        self.horizontalLayout_3 = QHBoxLayout(self.widget)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.image_label = QLabel(self.widget)
         self.image_label.setObjectName(u"image_label")
 
         self.horizontalLayout.addWidget(self.image_label)
 
-        self.three_D_plotter = QtInteractor(self.tab_01_view)
+        self.three_D_plotter = QtInteractor(self.widget)
         self.three_D_plotter.setObjectName(u"three_D_plotter")
         self.three_D_plotter.setMinimumSize(QSize(25, 0))
 
         self.horizontalLayout.addWidget(self.three_D_plotter)
 
+
+        self.horizontalLayout_3.addLayout(self.horizontalLayout)
+
+
+        self.verticalLayout.addWidget(self.widget)
+
         self.slice_slider = QSlider(self.tab_01_view)
         self.slice_slider.setObjectName(u"slice_slider")
         self.slice_slider.setOrientation(Qt.Orientation.Horizontal)
 
-        self.horizontalLayout.addWidget(self.slice_slider)
+        self.verticalLayout.addWidget(self.slice_slider)
 
 
-        self.horizontalLayout_1.addLayout(self.horizontalLayout)
+        self.horizontalLayout_1.addLayout(self.verticalLayout)
 
         self.tabWidget.addTab(self.tab_01_view, "")
         self.logoMN = QLabel(self.centralwidget)
@@ -228,7 +263,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Upload File", None))
+        self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Load brain MRI", None))
+        self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
+        self.inferMaskButton.setText(QCoreApplication.translate("MainWindow", u"AI generate mask", None))
         self.image_label.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_01_view), QCoreApplication.translate("MainWindow", u"View", None))
         self.logoMN.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><img src=\"gui/resources/MN_logo.png\" height=\"44\"/></p></body></html>", None))

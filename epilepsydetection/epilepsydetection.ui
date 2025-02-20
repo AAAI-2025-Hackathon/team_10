@@ -167,35 +167,75 @@ QWebEngineView {
        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QPushButton" name="uploadButton">
-          <property name="text">
-           <string>Upload File</string>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="image_label">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QtInteractor" name="three_D_plotter" native="true">
-          <property name="minimumSize">
+         <widget class="QWidget" name="widget_2" native="true">
+          <property name="maximumSize">
            <size>
-            <width>25</width>
-            <height>0</height>
+            <width>16777215</width>
+            <height>60</height>
            </size>
           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QPushButton" name="uploadButton">
+               <property name="text">
+                <string>Load brain MRI</string>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="uploadMaskButton">
+               <property name="text">
+                <string>Load mask</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="inferMaskButton">
+               <property name="text">
+                <string>AI generate mask</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="image_label">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QtInteractor" name="three_D_plotter" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>25</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
