@@ -1,6 +1,7 @@
 import nibabel as nib
 import numpy as np
 import pyvista as pv
+from vtk import vtkCommand
 import pyvistaqt as pvqt
 import sys
 from epilepsydetection import Ui_MainWindow
@@ -43,6 +44,7 @@ class MainWindow(QMainWindow):
         self.slice_slider.setMaximum(0)
         self.slice_slider.setValue(0)
         self.slice_slider.valueChanged.connect(self.update_2d_slice)
+        self.slice_slider.valueChanged.connect(self.update_3d_slice)
         self.ui.tabWidget.widget(0).layout().addWidget(self.slice_slider)
 
         self.customUiSetup()
@@ -78,6 +80,10 @@ class MainWindow(QMainWindow):
         logoPainter.end()
 
 
+    def layer_changed(self, caller, ev):
+        self.slice_slider.setValue(int(caller.GetOrigin()[2]))
+
+
     def load_array(self, array):
         """Load a new 3D array and update slider range."""
         self.array_3d = array
@@ -98,7 +104,18 @@ class MainWindow(QMainWindow):
         if self.array_3d is not None:
             model_data = self.array_3d
             self.three_D_plotter.clear()
-            self.three_D_plotter.add_volume(model_data, cmap="viridis")
+            self.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.linspace(0,30,256)) # opaque whole model
+            volume = self.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
+            self.slicing_plane = self.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0)
+            self.slicing_plane.AddObserver(vtkCommand.InteractionEvent, self.layer_changed)
+
+
+    def update_3d_slice(self, value):
+        plane_origin = list(self.slicing_plane.GetOrigin())
+        plane_origin[2] = value
+        print(plane_origin)
+        self.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
+        self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
     def array_to_pixmap(self, array_slice):
         """Convert a 2D numpy array to QPixmap."""
