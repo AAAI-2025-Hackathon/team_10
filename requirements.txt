@@ -5,3 +5,6 @@ scipy
 pyside6
 qtawesome
 pyvistaqt
+pandas
+scikit-learn
+seaborn
