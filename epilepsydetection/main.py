@@ -118,10 +118,12 @@ class MainWindow(QMainWindow):
             self.ui.three_D_plotter.clear()
             self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.linspace(0,30,256)) # opaque whole model
             volume = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
-            self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0)
-            self.slicing_plane.AddObserver(vtkCommand.InteractionEvent, self.layer_changed)
+            self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0, value=0)
+            self.slicing_plane.SetEnabled(0)
         if self.mask_3d is not None:
-            self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,30,256), show_scalar_bar = False, blending="additive")
+            self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,30,256), show_scalar_bar = False) # opaque whole mask
+            mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,60,256), show_scalar_bar = False)
+            mask_volume.mapper.SetClippingPlanes(volume.mapper.GetClippingPlanes())
 
 
     def update_3d_slice(self, value):
