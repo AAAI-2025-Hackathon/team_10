@@ -122,8 +122,8 @@ def classify_patient(input_array):
 
         input_array = scaler.transform(input_array)
 
-        prediction = classifier.predict([input_array])
-        probability = classifier.predict_proba([input_array])
+        prediction = classifier.predict(input_array)
+        probability = classifier.predict_proba(input_array)
 
         return {
             'prediction': prediction[0],

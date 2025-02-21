@@ -1,5 +1,6 @@
 import nibabel as nib
 import numpy as np
+import pandas as pd
 from vtk import vtkCommand
 import sys
 from epilepsydetection import Ui_MainWindow
@@ -11,6 +12,7 @@ from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
 import nibabel as nib
 from dict_model import DictionaryModel
+from model import classify_patient
 
 SAMPLE_NUMBER = 1
 DEFAULT_ICON_SIZE = QSize(35, 35)
@@ -230,10 +232,29 @@ class MainWindow(QMainWindow):
         self.load_mask(mask)
 
 
+    def load_patient_data(self):
+        print("Loading patient data...")
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Patient Data File",
+            "",
+            "CSV Files (*.csv);;All Files (*)"  # Adjust file types as needed
+        )
+        
+        if file_path:
+            try:
+                self.patient_data = pd.read_csv(file_path, sep=",")
+                print(f"Patient data loaded:\n{self.patient_data}")
+            except Exception as e:
+                print(f"Error loading file: {e}")
+                self.patient_data = None
+        return self.patient_data
+
+
     def extract_features(self):
         print("Extracting features...")
-        # features = classify_patient()
-        # print(features)
+        features = classify_patient(self.patient_data)
+        print(features)
 
 
 if __name__ == "__main__":
