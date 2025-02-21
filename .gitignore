@@ -1,6 +1,7 @@
 /ds005602-1.0.0/
-/masks/
 /.venv/
 /venv/
-/freesurfer_orig/
 **/__pycache__/
+/dataset/freesurfer_orig/freesurfer_orig/*
+/dataset/masks/masks/*
+/masks_prediction/
