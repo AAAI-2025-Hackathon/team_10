@@ -125,15 +125,15 @@ class MainWindow(QMainWindow):
         if self.array_3d is not None:
             model_data = self.array_3d
             self.ui.three_D_plotter.clear()
-            opaque_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.logspace(0,1.8,256)-1) # opaque whole model
-            slicing_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
+            opaque_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.logspace(0,1.8,256)-1, show_scalar_bar=False) # opaque whole model
+            slicing_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis", show_scalar_bar=False) # colored model with slicing
             self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(slicing_scan, normal = "-z", normal_rotation=False, outline_opacity=0, value=0)
             self.slicing_plane.SetEnabled(0)
             self.volumes.set_value("Opaque scan (whole)", opaque_scan)
             self.volumes.set_value("Sliced scan", slicing_scan)
         if self.mask_3d is not None:
-            opaque_mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "Wistia", opacity=np.logspace(0,1.8,256)-1, show_scalar_bar = False) # opaque whole mask
-            mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,45,256), show_scalar_bar = False)
+            opaque_mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "Wistia", opacity=np.logspace(0,1.8,256)-1, show_scalar_bar=False) # opaque whole mask
+            mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,45,256), show_scalar_bar=False)
             mask_volume.mapper.SetClippingPlanes(slicing_scan.mapper.GetClippingPlanes())
             self.volumes.set_value("Opaque mask (whole)", opaque_mask_volume)
             self.volumes.set_value("Sliced mask", mask_volume)
@@ -225,6 +225,12 @@ class MainWindow(QMainWindow):
         print("Generating mask...")
         mask = generate_mask(self.array_3d)
         self.load_mask(mask)
+
+
+    def extract_features(self):
+        print("Extracting features...")
+        # features = classify_patient()
+        # print(features)
 
 
 if __name__ == "__main__":
