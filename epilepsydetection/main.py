@@ -1,11 +1,10 @@
 import nibabel as nib
 import numpy as np
-import pyvista as pv
 from vtk import vtkCommand
-import pyvistaqt as pvqt
 import sys
 from epilepsydetection import Ui_MainWindow
-from PySide6.QtWidgets import QApplication, QMainWindow, QSlider, QFileDialog, QPushButton, QLabel
+from model import generate_mask
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QPainter, QPixmap, QImage
 from PySide6.QtSvg import QSvgRenderer
@@ -67,6 +66,9 @@ class MainWindow(QMainWindow):
 
         # Link mask upload button to upload_file method
         self.ui.uploadMaskButton.clicked.connect(self.upload_mask)
+
+        # Link generate mask button to generate_mask method
+        self.ui.inferMaskButton.clicked.connect(self.generate_mask)
 
         # Slider setup
         self.ui.slice_slider.setMinimum(0)
@@ -217,6 +219,12 @@ class MainWindow(QMainWindow):
 
     def upload_mask(self):
         self.upload_file(model_type="mask")
+
+    
+    def generate_mask(self):
+        print("Generating mask...")
+        mask = generate_mask(self.array_3d)
+        self.load_mask(mask)
 
 
 if __name__ == "__main__":
