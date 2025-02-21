@@ -16,8 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLayout,
-    QMainWindow, QPushButton, QSizePolicy, QSlider,
-    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
+    QListView, QMainWindow, QPushButton, QSizePolicy,
+    QSlider, QStatusBar, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -210,6 +211,12 @@ class Ui_MainWindow(object):
         self.three_D_plotter.setMinimumSize(QSize(25, 0))
 
         self.horizontalLayout.addWidget(self.three_D_plotter)
+
+        self.volumeListView = QListView(self.widget)
+        self.volumeListView.setObjectName(u"volumeListView")
+        self.volumeListView.setMaximumSize(QSize(300, 16777215))
+
+        self.horizontalLayout.addWidget(self.volumeListView)
 
 
         self.horizontalLayout_3.addLayout(self.horizontalLayout)

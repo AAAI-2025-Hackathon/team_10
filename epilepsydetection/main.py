@@ -11,6 +11,7 @@ from PySide6.QtGui import QPainter, QPixmap, QImage
 from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
 import nibabel as nib
+from dict_model import DictionaryModel
 
 SAMPLE_NUMBER = 1
 DEFAULT_ICON_SIZE = QSize(35, 35)
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)  # Set up the UI from the generated file
         self.setWindowTitle(WINDOW_TITLE)
         self.array_3d = None
+        self.volumes = DictionaryModel()
 
         self.customUiSetup()
 
@@ -78,6 +80,10 @@ class MainWindow(QMainWindow):
         setButtonsIcon("uploadMaskButton", "mdi.selection-ellipse", {"color": "#164194"})
         setButtonsIcon("inferMaskButton", "mdi.head-cog", {"color": "#164194"})
 
+        self.ui.volumeListView.setModel(self.volumes)
+        self.ui.volumeListView.setStyleSheet("QListView::indicator { width: 20px; height: 20px; }")
+        self.volumes.dataChanged.connect(self.on_volume_check)
+
 
     def layer_changed(self, caller, ev):
         self.ui.slice_slider.setValue(int(caller.GetOrigin()[2]))
@@ -87,11 +93,12 @@ class MainWindow(QMainWindow):
         """Load a new 3D array and update slider range."""
         self.array_3d = array
         self.mask_3d = None
+        self.volumes.resetInternalData()
         if array is not None:
             self.ui.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
-            self.update_2d_slice(0)  # Show initial slice
+            self.update_2d_slice(int(array.shape[2]/2))  # Show initial slice
             self.update_3d_model()
-            self.update_3d_slice(0)
+            self.update_3d_slice(int(array.shape[2]/2))
 
 
     def load_mask(self, array: np.ndarray):
@@ -116,14 +123,29 @@ class MainWindow(QMainWindow):
         if self.array_3d is not None:
             model_data = self.array_3d
             self.ui.three_D_plotter.clear()
-            self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.linspace(0,30,256)) # opaque whole model
-            volume = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
-            self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(volume, normal = "-z", normal_rotation=False, outline_opacity=0, value=0)
+            opaque_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="gray", opacity=np.logspace(0,1.8,256)-1) # opaque whole model
+            slicing_scan = self.ui.three_D_plotter.add_volume(model_data, cmap="viridis") # colored model with slicing
+            self.slicing_plane = self.ui.three_D_plotter.add_volume_clip_plane(slicing_scan, normal = "-z", normal_rotation=False, outline_opacity=0, value=0)
             self.slicing_plane.SetEnabled(0)
+            self.volumes.set_value("Opaque scan (whole)", opaque_scan)
+            self.volumes.set_value("Sliced scan", slicing_scan)
         if self.mask_3d is not None:
-            self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,30,256), show_scalar_bar = False) # opaque whole mask
-            mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,60,256), show_scalar_bar = False)
-            mask_volume.mapper.SetClippingPlanes(volume.mapper.GetClippingPlanes())
+            opaque_mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "Wistia", opacity=np.logspace(0,1.8,256)-1, show_scalar_bar = False) # opaque whole mask
+            mask_volume = self.ui.three_D_plotter.add_volume(self.mask_3d * self.array_3d, cmap = "cool", opacity=np.linspace(0,45,256), show_scalar_bar = False)
+            mask_volume.mapper.SetClippingPlanes(slicing_scan.mapper.GetClippingPlanes())
+            self.volumes.set_value("Opaque mask (whole)", opaque_mask_volume)
+            self.volumes.set_value("Sliced mask", mask_volume)
+
+
+    def on_volume_check(self, top_left, bottom_right, roles):
+        if Qt.CheckStateRole in roles:
+            index = top_left  # Assuming single item selection
+            if self.volumes.data(index, Qt.CheckStateRole) == Qt.Checked:
+                volume = self.volumes.get_value(self.volumes.data(index, Qt.DisplayRole))
+                self.ui.three_D_plotter.add_actor(volume)
+            else:
+                volume = self.volumes.get_value(self.volumes.data(index, Qt.DisplayRole))
+                self.ui.three_D_plotter.remove_actor(volume)
 
 
     def update_3d_slice(self, value):

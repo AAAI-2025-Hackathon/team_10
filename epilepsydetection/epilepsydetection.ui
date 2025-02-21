@@ -233,6 +233,16 @@ QWebEngineView {
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QListView" name="volumeListView">
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
