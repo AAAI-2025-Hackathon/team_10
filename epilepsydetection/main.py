@@ -72,8 +72,9 @@ class MainWindow(QMainWindow):
 
         # Slider setup
         self.ui.slice_slider.setMinimum(0)
-        self.ui.slice_slider.setMaximum(0)
-        self.ui.slice_slider.setValue(0)
+        self.ui.slice_slider.setMaximum(255)
+        self.ui.slice_slider.setValue(128)
+        self.ui.slice_slider.setEnabled(False)
         self.ui.slice_slider.valueChanged.connect(self.update_2d_slice)
         self.ui.slice_slider.valueChanged.connect(self.update_3d_slice)
 
@@ -98,9 +99,11 @@ class MainWindow(QMainWindow):
         self.volumes.resetInternalData()
         if array is not None:
             self.ui.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
-            self.update_2d_slice(int(array.shape[2]/2))  # Show initial slice
+            self.ui.slice_slider.setValue(int(array.shape[2]/2))
+            self.ui.slice_slider.setEnabled(True)
+            self.update_2d_slice(self.ui.slice_slider.value())  # Show initial slice
             self.update_3d_model()
-            self.update_3d_slice(int(array.shape[2]/2))
+            self.update_3d_slice(self.ui.slice_slider.value())
 
 
     def load_mask(self, array: np.ndarray):
