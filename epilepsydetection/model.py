@@ -2,13 +2,39 @@ import torch
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 import numpy as np
 from pathlib import Path
+from huggingface_hub import snapshot_download
 
 CURRENT_DIR = Path(__file__).parent
-MODEL_DIR = CURRENT_DIR / 'models' / 'nnUnet_results' / 'Dataset001_BrainEpilepsy' / 'nnUNetTrainer__nnUNetPlans__3d_fullres'
+MODEL_DIR = CURRENT_DIR / 'models'
+
+def download_checkpoint():
+    """Download checkpoint file from Hugging Face if not present."""
+    try:
+        # Create model directory if it doesn't exist
+        MODEL_DIR.mkdir(parents=True, exist_ok=True)
+        
+        checkpoint_path = MODEL_DIR / "nnUNetTrainer__nnUNetPlans__3d_fullres" / "fold_1" / "checkpoint_latest.pth"
+        
+        # Only download if file doesn't exist
+        if not checkpoint_path.exists():
+            print("Downloading checkpoint from Hugging Face...")
+            snapshot_download(
+                repo_id="THaar50/epilepsyresection",
+                local_dir=MODEL_DIR,
+                ignore_patterns=[".gitattributes", "README.md"]
+            )
+            print("Checkpoint downloaded successfully!")
+        return True
+    except Exception as e:
+        print(f"Error downloading checkpoint: {e}")
+        return False
 
 def generate_mask(input_array):
     """Generate mask for input array using nnUNet model."""
     try:
+        if not download_checkpoint():
+            raise Exception("Failed to download checkpoint")
+        
         if len(input_array.shape) == 3:
             input_array = input_array[np.newaxis]  # Add channel dimension as first dimension
 
@@ -25,7 +51,7 @@ def generate_mask(input_array):
         )
 
         predictor.initialize_from_trained_model_folder(
-            model_training_output_dir=MODEL_DIR,
+            model_training_output_dir=MODEL_DIR / "nnUNetTrainer__nnUNetPlans__3d_fullres",
             use_folds=(1,),
             checkpoint_name='checkpoint_latest.pth'
         )
