@@ -2,7 +2,8 @@ import torch
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 import numpy as np
 from pathlib import Path
-from huggingface_hub import snapshot_download
+from huggingface_hub import snapshot_download, hf_hub_download
+import joblib
 
 CURRENT_DIR = Path(__file__).parent
 MODEL_DIR = CURRENT_DIR / 'models'
@@ -78,3 +79,57 @@ def generate_mask(input_array):
         print(f"Error in generate_mask: {e}")
         return None
 
+
+def load_classifier():
+    """Load Random Forest classifier and scaler from joblib file."""
+    try:
+        rf_path = MODEL_DIR / "rf_epilepsy" / "rf_model_final.joblib"
+        scaler_path = MODEL_DIR / "rf_epilepsy" / "scaler_final.joblib"
+        if not rf_path.exists():
+            print("Downloading RF model from Hugging Face...")
+            hf_hub_download(
+                repo_id="THaar50/epilepsyresection",
+                local_dir=MODEL_DIR / "rf_epilepsy",
+                filename="rf_model_final.joblib"
+            )
+            print("RF model downloaded successfully!")
+
+        if not scaler_path.exists():
+            print("Downloading scaler from Hugging Face...")
+            hf_hub_download(
+                repo_id="THaar50/epilepsyresection",
+                local_dir=MODEL_DIR / "rf_epilepsy",
+                filename="scaler_final.joblib"
+            )
+            print("Scaler downloaded successfully!")
+
+        classifier = joblib.load(rf_path)
+        scaler = joblib.load(scaler_path)
+        print("Random Forest classifier loaded successfully!")
+        return classifier, scaler
+
+    except Exception as e:
+        print(f"Error loading Random Forest classifier: {e}")
+        return None
+
+
+def classify_patient(input_array):
+    """Classify patient using RF model."""
+    try:
+        classifier, scaler = load_classifier()
+        if classifier is None:
+            raise Exception("Failed to load classifier")
+
+        input_array = scaler.transform(input_array)
+
+        prediction = classifier.predict([input_array])
+        probability = classifier.predict_proba([input_array])
+
+        return {
+            'prediction': prediction[0],
+            'probability': probability[0]
+        }
+
+    except Exception as e:
+        print(f"Error in classify_patient: {e}")
+        return None
