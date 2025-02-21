@@ -8,3 +8,4 @@ pyvistaqt
 pandas
 scikit-learn
 seaborn
+nnunetv2
