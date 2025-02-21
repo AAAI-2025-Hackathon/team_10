@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
         return scaled_pixmap
 
 
-    def upload_file(self, model_type = "mri"):
+    def upload_file(self, model_type = "mri"): # gets passed False when used as a slot unfortunately, leaving this for now
         """Open file dialog and load the selected file as a 3D array."""
         file_path, _ = QFileDialog.getOpenFileName(
             self,
@@ -183,10 +183,10 @@ class MainWindow(QMainWindow):
             try:
                 nifti_img = nib.load(file_path).get_fdata()
                 print(f"Selected file: {file_path}")
-                if model_type=="mri":
-                    self.load_array(nifti_img)
-                elif model_type=="mask":
+                if model_type=="mask":
                     self.load_mask(nifti_img)
+                else:
+                    self.load_array(nifti_img)
             except Exception as e:
                 print(f"Error loading file: {e}")
 
