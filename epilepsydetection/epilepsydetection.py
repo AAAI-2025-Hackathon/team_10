@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLayout,
-    QListView, QMainWindow, QPushButton, QSizePolicy,
-    QSlider, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
+    QLayout, QListView, QMainWindow, QPushButton,
+    QSizePolicy, QSlider, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -133,10 +133,10 @@ class Ui_MainWindow(object):
 "\n"
 "QGroupBox {\n"
 "    background-color: #F9F9F9;\n"
-"	padding: 20px;\n"
+"	padding: 5px;\n"
 "    border-radius: 6px;\n"
 "    font-size: 13pt;\n"
-"    margin: 35px;\n"
+"    margin: 0px;\n"
 "}\n"
 "\n"
 "QGroupBox::title {\n"
@@ -212,11 +212,24 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.three_D_plotter)
 
-        self.volumeListView = QListView(self.widget)
+        self.groupBox_3 = QGroupBox(self.widget)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.groupBox_3.setMinimumSize(QSize(320, 0))
+        self.groupBox_3.setMaximumSize(QSize(320, 16777215))
+        self.verticalLayoutWidget = QWidget(self.groupBox_3)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 611))
+        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.volumeListView = QListView(self.verticalLayoutWidget)
         self.volumeListView.setObjectName(u"volumeListView")
         self.volumeListView.setMaximumSize(QSize(300, 16777215))
 
-        self.horizontalLayout.addWidget(self.volumeListView)
+        self.verticalLayout_2.addWidget(self.volumeListView)
+
+
+        self.horizontalLayout.addWidget(self.groupBox_3)
 
 
         self.horizontalLayout_3.addLayout(self.horizontalLayout)
@@ -274,6 +287,7 @@ class Ui_MainWindow(object):
         self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
         self.inferMaskButton.setText(QCoreApplication.translate("MainWindow", u"AI generate mask", None))
         self.image_label.setText("")
+        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Volumes to show", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_01_view), QCoreApplication.translate("MainWindow", u"View", None))
         self.logoMN.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><img src=\"gui/resources/MN_logo.png\" height=\"44\"/></p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:18pt;\">Epilepsy detection</span></p></body></html>", None))
