@@ -5,3 +5,6 @@
 /dataset/freesurfer_orig/freesurfer_orig/*
 /dataset/masks/masks/*
 /masks_prediction/
+/.venv2/
+/freesurfer_orig/
+/masks/
