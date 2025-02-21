@@ -2,8 +2,8 @@ import nibabel as nib
 import numpy as np
 from pathlib import Path
 
-DATA_PATH = Path(r"C:\Users\haar\Documents\AI_Consulting\Hackathon\team_10\freesurfer_orig")
-MASK_PATH = Path(r"C:\Users\haar\Documents\AI_Consulting\Hackathon\team_10\masks")
+DATA_PATH = Path("dataset/freesurfer_orig/freesurfer_orig")
+MASK_PATH = Path("dataset/masks/masks")
 
 def create_empty_masks(file_path: Path):
     """Create empty mask for a given MRI file."""
