@@ -2,12 +2,41 @@ import nibabel as nib
 import numpy as np
 from pathlib import Path
 
+DATA_PATH = Path(r"C:\Users\haar\Documents\AI_Consulting\Hackathon\team_10\freesurfer_orig")
+MASK_PATH = Path(r"C:\Users\haar\Documents\AI_Consulting\Hackathon\team_10\masks")
+
 def create_empty_masks(file_path: Path):
-    data = nib.load(file_path).get_fdata()
-    affine = nib.load(file_path).affine
-    mask = np.zeros_like(data)
-    nifti_image = nib.Nifti1Image(mask, affine)
-    nib.save(nifti_image, f"{file_path.stem[:4]}_MaskInOrig.nii.gz")
+    """Create empty mask for a given MRI file."""
+    try:
+        img = nib.load(file_path)
+        data = img.get_fdata()
+        mask = np.zeros_like(data)
+        mask_img = nib.Nifti1Image(mask, img.affine)
+        
+        patient_id = file_path.stem[:4]
+        patient_mask_dir = MASK_PATH / patient_id
+        patient_mask_dir.mkdir(parents=True, exist_ok=True)
+        
+        output_path = patient_mask_dir / f"{patient_id}_MaskInOrig.nii.gz"
+        nib.save(mask_img, output_path)
+        print(f"Created mask for patient {patient_id} in {output_path}")
+        
+    except Exception as e:
+        print(f"Error processing {file_path}: {e}")
+
+def process_all_patients():
+    """Process all patient files starting with 4000."""
+    patient_files = list(DATA_PATH.glob("4[0-9][0-9][0-9]_freesurfer_orig.nii.gz"))
+    
+    if not patient_files:
+        print("No matching files found")
+        return
+    
+    print(f"Found {len(patient_files)} files to process")
+    
+    for file_path in patient_files:
+        if file_path.stem.startswith('4'):
+            create_empty_masks(file_path)
 
 if __name__ == "__main__":
-    create_empty_masks(Path(r"C:\Users\haar\Documents\AI_Consulting\Hackathon\team_10\freesurfer_orig\4001_freesurfer_orig.nii.gz"))
+    process_all_patients()
