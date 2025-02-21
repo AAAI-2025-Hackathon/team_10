@@ -123,10 +123,10 @@ QStatusBar {
 
 QGroupBox {
     background-color: #F9F9F9;
-	padding: 20px;
+	padding: 5px;
     border-radius: 6px;
     font-size: 13pt;
-    margin: 35px;
+    margin: 0px;
 }
 
 QGroupBox::title {
@@ -234,13 +234,44 @@ QWebEngineView {
               </widget>
              </item>
              <item>
-              <widget class="QListView" name="volumeListView">
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="minimumSize">
+                <size>
+                 <width>320</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>300</width>
+                 <width>320</width>
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="title">
+                <string>Volumes to show</string>
+               </property>
+               <widget class="QWidget" name="verticalLayoutWidget">
+                <property name="geometry">
+                 <rect>
+                  <x>19</x>
+                  <y>69</y>
+                  <width>281</width>
+                  <height>611</height>
+                 </rect>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QListView" name="volumeListView">
+                   <property name="maximumSize">
+                    <size>
+                     <width>300</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </widget>
              </item>
             </layout>

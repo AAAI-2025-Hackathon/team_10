@@ -1,4 +1,4 @@
-/ds005602-1.0.0/
+dataset/ds005602-1.0.0/
 /.venv/
 /venv/
 **/__pycache__/
@@ -6,5 +6,4 @@
 /dataset/masks/masks/*
 /masks_prediction/
 /.venv2/
-/freesurfer_orig/
-/masks/
+epilepsydetection/models/
