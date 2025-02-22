@@ -89,7 +89,8 @@ def load_classifier():
             print("Downloading RF model from Hugging Face...")
             hf_hub_download(
                 repo_id="THaar50/epilepsyresection",
-                local_dir=MODEL_DIR / "rf_epilepsy",
+                local_dir=MODEL_DIR,
+                subfolder="rf_epilepsy",
                 filename="rf_model_final.joblib"
             )
             print("RF model downloaded successfully!")
@@ -98,7 +99,8 @@ def load_classifier():
             print("Downloading scaler from Hugging Face...")
             hf_hub_download(
                 repo_id="THaar50/epilepsyresection",
-                local_dir=MODEL_DIR / "rf_epilepsy",
+                local_dir=MODEL_DIR,
+                subfolder="rf_epilepsy",
                 filename="scaler_final.joblib"
             )
             print("Scaler downloaded successfully!")
