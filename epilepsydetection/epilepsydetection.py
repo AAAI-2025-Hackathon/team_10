@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
-    QLayout, QListView, QMainWindow, QPushButton,
-    QSizePolicy, QSlider, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
+    QLabel, QLayout, QListView, QMainWindow,
+    QPushButton, QSizePolicy, QSlider, QStatusBar,
+    QTabWidget, QVBoxLayout, QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -167,30 +167,45 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widget_2 = QWidget(self.tab_01_view)
         self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setMaximumSize(QSize(16777215, 60))
+        self.widget_2.setMaximumSize(QSize(16777215, 120))
         self.horizontalLayout_5 = QHBoxLayout(self.widget_2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName(u"gridLayout")
         self.uploadButton = QPushButton(self.widget_2)
         self.uploadButton.setObjectName(u"uploadButton")
         self.uploadButton.setCheckable(False)
         self.uploadButton.setFlat(False)
 
-        self.horizontalLayout_4.addWidget(self.uploadButton)
-
-        self.uploadMaskButton = QPushButton(self.widget_2)
-        self.uploadMaskButton.setObjectName(u"uploadMaskButton")
-
-        self.horizontalLayout_4.addWidget(self.uploadMaskButton)
+        self.gridLayout.addWidget(self.uploadButton, 1, 0, 1, 1)
 
         self.inferMaskButton = QPushButton(self.widget_2)
         self.inferMaskButton.setObjectName(u"inferMaskButton")
 
-        self.horizontalLayout_4.addWidget(self.inferMaskButton)
+        self.gridLayout.addWidget(self.inferMaskButton, 1, 2, 1, 1)
+
+        self.uploadMaskButton = QPushButton(self.widget_2)
+        self.uploadMaskButton.setObjectName(u"uploadMaskButton")
+
+        self.gridLayout.addWidget(self.uploadMaskButton, 1, 1, 1, 1)
+
+        self.loadPatientDataButton = QPushButton(self.widget_2)
+        self.loadPatientDataButton.setObjectName(u"loadPatientDataButton")
+
+        self.gridLayout.addWidget(self.loadPatientDataButton, 0, 0, 1, 1)
+
+        self.classifyPatientButton = QPushButton(self.widget_2)
+        self.classifyPatientButton.setObjectName(u"classifyPatientButton")
+
+        self.gridLayout.addWidget(self.classifyPatientButton, 0, 1, 1, 1)
+
+        self.patientPredictionLabel = QLabel(self.widget_2)
+        self.patientPredictionLabel.setObjectName(u"patientPredictionLabel")
+
+        self.gridLayout.addWidget(self.patientPredictionLabel, 0, 2, 1, 1)
 
 
-        self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_5.addLayout(self.gridLayout)
 
 
         self.verticalLayout.addWidget(self.widget_2)
@@ -284,8 +299,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Load brain MRI", None))
-        self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
         self.inferMaskButton.setText(QCoreApplication.translate("MainWindow", u"AI generate mask", None))
+        self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
+        self.loadPatientDataButton.setText(QCoreApplication.translate("MainWindow", u"Load Patient Data", None))
+        self.classifyPatientButton.setText(QCoreApplication.translate("MainWindow", u"Predict Epilepsy", None))
+        self.patientPredictionLabel.setText(QCoreApplication.translate("MainWindow", u"Prediction", None))
         self.image_label.setText("")
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Volumes to show", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_01_view), QCoreApplication.translate("MainWindow", u"View", None))

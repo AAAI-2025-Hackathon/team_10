@@ -63,14 +63,12 @@ class MainWindow(QMainWindow):
         self.ui.logoMN.setPixmap(logoPixMap)
         logoPainter.end()
 
-        # Link upload button to upload_file method
+        # Link buttons to methods
         self.ui.uploadButton.clicked.connect(self.upload_file)
-
-        # Link mask upload button to upload_file method
         self.ui.uploadMaskButton.clicked.connect(self.upload_mask)
-
-        # Link generate mask button to generate_mask method
         self.ui.inferMaskButton.clicked.connect(self.generate_mask)
+        self.ui.loadPatientDataButton.clicked.connect(self.load_patient_data)
+        self.ui.classifyPatientButton.clicked.connect(self.extract_features)
 
         # Slider setup
         self.ui.slice_slider.setMinimum(0)
@@ -84,6 +82,8 @@ class MainWindow(QMainWindow):
         setButtonsIcon("uploadButton", "mdi.brain", {"color": "#164194"})
         setButtonsIcon("uploadMaskButton", "mdi.selection-ellipse", {"color": "#164194"})
         setButtonsIcon("inferMaskButton", "mdi.head-cog", {"color": "#164194"})
+        setButtonsIcon("loadPatientDataButton", "mdi.file-document-outline", {"color": "#164194"})
+        setButtonsIcon("classifyPatientButton", "fa.caret-square-o-right", {"color": "#164194"})
 
         self.ui.volumeListView.setModel(self.volumes)
         self.ui.volumeListView.setStyleSheet("QListView::indicator { width: 20px; height: 20px; }")
@@ -267,7 +267,12 @@ class MainWindow(QMainWindow):
         print("Extracting features...")
         result = classify_patient(self.patient_data)
         print(result)
-        print(f"Probability of epilepsy: {result['probability'][0]*100}%")
+        probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
+        self.update_prediction_label(result['prediction'], probability)
+
+    
+    def update_prediction_label(self, prediction, probability):
+        self.ui.patientPredictionLabel.setText(f"Diagnosis: {prediction} ({probability}%)")
 
 
 if __name__ == "__main__":
