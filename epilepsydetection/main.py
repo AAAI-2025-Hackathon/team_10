@@ -5,7 +5,7 @@ from vtk import vtkCommand
 import sys
 from epilepsydetection import Ui_MainWindow
 from model import generate_mask
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QPainter, QPixmap, QImage
 from PySide6.QtSvg import QSvgRenderer
@@ -29,6 +29,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)  # Set up the UI from the generated file
         self.setWindowTitle(WINDOW_TITLE)
         self.array_3d = None
+        self.mask_3d = None
+        self.patient_data = None
         self.volumes = DictionaryModel()
 
         self.customUiSetup()
@@ -239,13 +241,20 @@ class MainWindow(QMainWindow):
 
     
     def generate_mask(self):
-        print("Generating mask...")
-        mask = generate_mask(self.array_3d)
-        self.load_mask(mask)
+        if self.array_3d:
+            print("Generating mask...")
+            mask = generate_mask(self.array_3d)
+            self.load_mask(mask)
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText("Mask generation failed")
+            msg.setInformativeText("No MRI data is currently loaded. Please load MRI data first.")
+            msg.setWindowTitle("No MRI data loaded")
+            msg.exec()
 
 
     def load_patient_data(self):
-        print("Loading patient data...")
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Patient Data File",
@@ -259,16 +268,21 @@ class MainWindow(QMainWindow):
                 print(f"Patient data loaded:\n{self.patient_data}")
             except Exception as e:
                 print(f"Error loading file: {e}")
-                self.patient_data = None
-        return self.patient_data
 
 
     def extract_features(self):
-        print("Extracting features...")
-        result = classify_patient(self.patient_data)
-        print(result)
-        probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
-        self.update_prediction_label(result['prediction'], probability)
+        if self.patient_data:
+            print("Extracting features...")
+            result = classify_patient(self.patient_data)
+            probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
+            self.update_prediction_label(result['prediction'], probability)
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText("Classification failed")
+            msg.setInformativeText("No patient data is currently loaded. Please load patient data first.")
+            msg.setWindowTitle("No patient data loaded")
+            msg.exec()
 
     
     def update_prediction_label(self, prediction, probability):
