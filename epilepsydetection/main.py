@@ -202,7 +202,6 @@ class MainWindow(QMainWindow):
     def update_3d_slice(self, value):
         plane_origin = list(self.slicing_plane.GetOrigin())
         plane_origin[self.slicing_axis] = value
-        print(plane_origin)
         self.slicing_plane.SetOrigin(plane_origin)
         self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
