@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
         self.PLANES = [1,2,0]
 
         self.customUiSetup()
+        self.ui.planeComboBox.setCurrentIndex(1)
         self.slicing_axis = self.PLANES[self.ui.planeComboBox.currentIndex()]
     def resizeEvent(self, event):
         self.resizeTabWidget()
