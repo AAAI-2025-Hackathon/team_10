@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
 
 
     def extract_features(self):
-        if self.patient_data:
+        if self.patient_data is not None:
             print("Extracting features...")
             result = classify_patient(self.patient_data)
             probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
