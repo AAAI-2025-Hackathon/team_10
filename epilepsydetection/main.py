@@ -251,6 +251,7 @@ class MainWindow(QMainWindow):
             msg.setText("Mask generation failed")
             msg.setInformativeText("No MRI data is currently loaded. Please load MRI data first.")
             msg.setWindowTitle("No MRI data loaded")
+            msg.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
             msg.exec()
 
 
@@ -282,6 +283,7 @@ class MainWindow(QMainWindow):
             msg.setText("Classification failed")
             msg.setInformativeText("No patient data is currently loaded. Please load patient data first.")
             msg.setWindowTitle("No patient data loaded")
+            msg.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
             msg.exec()
 
     
