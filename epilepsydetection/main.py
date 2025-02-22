@@ -149,10 +149,22 @@ class MainWindow(QMainWindow):
             index = top_left  # Assuming single item selection
             if self.volumes.data(index, Qt.CheckStateRole) == Qt.Checked:
                 volume = self.volumes.get_value(self.volumes.data(index, Qt.DisplayRole))
-                self.ui.three_D_plotter.add_actor(volume)
+                self.restore_volume_order()
             else:
                 volume = self.volumes.get_value(self.volumes.data(index, Qt.DisplayRole))
                 self.ui.three_D_plotter.remove_actor(volume)
+
+
+    def restore_volume_order(self):
+        index = 0
+        checked = self.volumes.data(self.volumes.index(index), Qt.CheckStateRole)
+        while checked is not None:
+            if checked == Qt.Checked:
+                volume = self.volumes.get_value(self.volumes.data(self.volumes.index(index), Qt.DisplayRole))
+                self.ui.three_D_plotter.remove_actor(volume)
+                self.ui.three_D_plotter.add_actor(volume)
+            index += 1
+            checked = self.volumes.data(self.volumes.index(index), Qt.CheckStateRole)
 
 
     def update_3d_slice(self, value):
