@@ -38,6 +38,8 @@ class MainWindow(QMainWindow):
         self.customUiSetup()
         self.ui.planeComboBox.setCurrentIndex(1)
         self.slicing_axis = self.PLANES[self.ui.planeComboBox.currentIndex()]
+
+
     def resizeEvent(self, event):
         self.resizeTabWidget()
         return super().resizeEvent(event)
@@ -111,6 +113,9 @@ class MainWindow(QMainWindow):
 
 
     def planeNormalDirectionChanged(self):
+        if not hasattr(self, 'slicing_plane') or self.array_3d is None:
+            return
+            
         normal = [0,0,0]
         normal[self.slicing_axis] = self.ui.directionComboBox.currentIndex()*2-1
         self.slicing_plane.SetNormal(normal)
