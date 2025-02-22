@@ -15,10 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLayout, QListView, QMainWindow,
-    QPushButton, QSizePolicy, QSlider, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLayout, QListView,
+    QMainWindow, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QStatusBar, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -151,6 +152,10 @@ class Ui_MainWindow(object):
 "#tabWidget > QFrame {\n"
 "	border: none;\n"
 "}\n"
+"\n"
+"QComboBox {\n"
+"padding-left: 15px;\n"
+"}\n"
 "")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -234,13 +239,18 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.three_D_plotter)
 
-        self.groupBox_3 = QGroupBox(self.widget)
+        self.settingsWidget = QWidget(self.widget)
+        self.settingsWidget.setObjectName(u"settingsWidget")
+        self.settingsWidget.setMaximumSize(QSize(335, 16777215))
+        self.verticalLayout_3 = QVBoxLayout(self.settingsWidget)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.groupBox_3 = QGroupBox(self.settingsWidget)
         self.groupBox_3.setObjectName(u"groupBox_3")
-        self.groupBox_3.setMinimumSize(QSize(320, 0))
+        self.groupBox_3.setMinimumSize(QSize(320, 350))
         self.groupBox_3.setMaximumSize(QSize(320, 16777215))
         self.verticalLayoutWidget = QWidget(self.groupBox_3)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 551))
+        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 261))
         self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -251,7 +261,64 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.volumeListView)
 
 
-        self.horizontalLayout.addWidget(self.groupBox_3)
+        self.verticalLayout_3.addWidget(self.groupBox_3)
+
+        self.groupBox = QGroupBox(self.settingsWidget)
+        self.groupBox.setObjectName(u"groupBox")
+        self.verticalLayout_4 = QVBoxLayout(self.groupBox)
+        self.verticalLayout_4.setSpacing(4)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(-1, 50, -1, 0)
+        self.label = QLabel(self.groupBox)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(0, 40))
+        self.label.setMaximumSize(QSize(16777215, 40))
+        self.label.setStyleSheet(u"QLabel: {\n"
+"padding: 0px;\n"
+"}")
+
+        self.verticalLayout_4.addWidget(self.label)
+
+        self.planeComboBox = QComboBox(self.groupBox)
+        self.planeComboBox.addItem("")
+        self.planeComboBox.addItem("")
+        self.planeComboBox.addItem("")
+        self.planeComboBox.setObjectName(u"planeComboBox")
+        self.planeComboBox.setMinimumSize(QSize(0, 35))
+
+        self.verticalLayout_4.addWidget(self.planeComboBox)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer_2)
+
+        self.label_2 = QLabel(self.groupBox)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy1)
+        self.label_2.setMinimumSize(QSize(0, 40))
+        self.label_2.setMaximumSize(QSize(16777215, 30))
+        self.label_2.setStyleSheet(u"QLabel {\n"
+"padding-top: 0px;\n"
+"padding-bottom: 0px;\n"
+"}")
+
+        self.verticalLayout_4.addWidget(self.label_2)
+
+        self.directionComboBox = QComboBox(self.groupBox)
+        self.directionComboBox.setObjectName(u"directionComboBox")
+        self.directionComboBox.setMinimumSize(QSize(0, 35))
+
+        self.verticalLayout_4.addWidget(self.directionComboBox)
+
+
+        self.verticalLayout_3.addWidget(self.groupBox)
+
+
+        self.horizontalLayout.addWidget(self.settingsWidget)
 
 
         self.horizontalLayout_3.addLayout(self.horizontalLayout)
@@ -313,6 +380,13 @@ class Ui_MainWindow(object):
         self.patientPredictionLabel.setText(QCoreApplication.translate("MainWindow", u"Prediction", None))
         self.image_label.setText("")
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Volumes to show", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Slicing plane", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Plane:", None))
+        self.planeComboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Axial (horizontal)", None))
+        self.planeComboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"Coronal (vertical-left-right)", None))
+        self.planeComboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"Saggital (vertical-front-back)", None))
+
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Slicing direction:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_01_view), QCoreApplication.translate("MainWindow", u"View", None))
         self.logoMN.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><img src=\"gui/resources/MN_logo.png\" height=\"44\"/></p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:18pt;\">Epilepsy detection</span></p></body></html>", None))

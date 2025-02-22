@@ -19,6 +19,7 @@ DEFAULT_ICON_SIZE = QSize(35, 35)
 TOP_RIGHT_BUTTONS_X_OFFSET = -60
 WINDOW_ICON_NAME = "mdi.brain"
 WINDOW_TITLE = "MicroNova Epilepsie Detection"
+PLANES_NORMALS_DIRECTIONS_NAMES = [["Inferior (bottom)", "Superior (top)"], ["Anterior (front)", "Posterior (back)"], ["Right", "Left"]]
 
 
 class MainWindow(QMainWindow):
@@ -32,9 +33,10 @@ class MainWindow(QMainWindow):
         self.mask_3d = None
         self.patient_data = None
         self.volumes = DictionaryModel()
+        self.PLANES = [1,2,0]
 
         self.customUiSetup()
-
+        self.slicing_axis = self.PLANES[self.ui.planeComboBox.currentIndex()]
     def resizeEvent(self, event):
         self.resizeTabWidget()
         return super().resizeEvent(event)
@@ -91,9 +93,30 @@ class MainWindow(QMainWindow):
         self.ui.volumeListView.setStyleSheet("QListView::indicator { width: 20px; height: 20px; }")
         self.volumes.dataChanged.connect(self.on_volume_check)
 
+        # Link comboBoxes signals to slots
+        self.ui.planeComboBox.currentIndexChanged.connect(self.planeChanged)
+        self.ui.directionComboBox.currentIndexChanged.connect(self.planeNormalDirectionChanged)
 
-    def layer_changed(self, caller, ev):
-        self.ui.slice_slider.setValue(int(caller.GetOrigin()[2]))
+
+    def update_combobox(self, combobox, new_items):
+        combobox.clear()
+        combobox.addItems(new_items)
+
+
+    def planeChanged(self):
+        index = self.ui.planeComboBox.currentIndex()
+        self.slicing_axis = self.PLANES[index]
+        self.update_combobox(self.ui.directionComboBox, PLANES_NORMALS_DIRECTIONS_NAMES[index])
+
+
+    def planeNormalDirectionChanged(self):
+        normal = [0,0,0]
+        normal[self.slicing_axis] = self.ui.directionComboBox.currentIndex()*2-1
+        self.slicing_plane.SetNormal(normal)
+        self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
+        current_slice = self.ui.slice_slider.value()
+        self.update_2d_slice(current_slice)
+        self.update_3d_slice(current_slice)
 
 
     def load_array(self, array):
@@ -105,24 +128,31 @@ class MainWindow(QMainWindow):
             self.ui.slice_slider.setMaximum(array.shape[2] - 1)  # Assuming we slice along last axis
             self.ui.slice_slider.setValue(int(array.shape[2]/2))
             self.ui.slice_slider.setEnabled(True)
-            self.update_2d_slice(self.ui.slice_slider.value())  # Show initial slice
             self.update_3d_model()
-            self.update_3d_slice(self.ui.slice_slider.value())
+            self.planeChanged()
+            self.planeNormalDirectionChanged()
 
 
     def load_mask(self, array: np.ndarray):
         self.mask_3d = array
         if array is None or self.array_3d is None or not self.array_3d.shape == array.shape:
             return
-        self.update_2d_slice(self.ui.slice_slider.value())
         self.update_3d_model()
-        self.update_3d_slice(self.ui.slice_slider.value())
+        self.planeChanged()
+        self.planeNormalDirectionChanged()
 
     def update_2d_slice(self, value):
         """Update display with the selected slice."""
         if self.array_3d is not None:
-            current_slice = self.array_3d[:, :, value]
-            current_mask_slice = self.mask_3d[:, :, value] if self.mask_3d is not None else None
+            if self.slicing_axis == 0:
+                current_slice = self.array_3d[value, :, :]
+                current_mask_slice = self.mask_3d[value, :, :] if self.mask_3d is not None else None
+            elif self.slicing_axis == 1:
+                current_slice = self.array_3d[:, value, :]
+                current_mask_slice = self.mask_3d[:, value, :] if self.mask_3d is not None else None
+            else:
+                current_slice = self.array_3d[:, :, value]
+                current_mask_slice = self.mask_3d[:, :, value] if self.mask_3d is not None else None
             # Update your display here with current_slice
             self.ui.image_label.setPixmap(self.array_to_pixmap(current_slice, current_mask_slice))
             print(f"Showing slice {value} with shape {current_slice.shape}")
@@ -171,9 +201,9 @@ class MainWindow(QMainWindow):
 
     def update_3d_slice(self, value):
         plane_origin = list(self.slicing_plane.GetOrigin())
-        plane_origin[2] = value
-        # print(plane_origin)
-        self.ui.three_D_plotter.plane_widgets[0].SetOrigin(plane_origin)
+        plane_origin[self.slicing_axis] = value
+        print(plane_origin)
+        self.slicing_plane.SetOrigin(plane_origin)
         self.slicing_plane.InvokeEvent(vtkCommand.EndInteractionEvent)
 
 
