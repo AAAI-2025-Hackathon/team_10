@@ -237,18 +237,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(-1, 6, -1, -1)
         self.image_label = QLabel(self.tab_01_view)
         self.image_label.setObjectName(u"image_label")
+        self.image_label.setMaximumSize(QSize(583, 16777215))
 
         self.horizontalLayout.addWidget(self.image_label)
 
         self.frame_3 = QFrame(self.tab_01_view)
         self.frame_3.setObjectName(u"frame_3")
-        self.verticalLayoutWidget_2 = QWidget(self.frame_3)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 551, 621))
-        self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_5 = QVBoxLayout(self.frame_3)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.three_D_plotter = QtInteractor(self.verticalLayoutWidget_2)
+        self.three_D_plotter = QtInteractor(self.frame_3)
         self.three_D_plotter.setObjectName(u"three_D_plotter")
         self.three_D_plotter.setMinimumSize(QSize(25, 0))
 

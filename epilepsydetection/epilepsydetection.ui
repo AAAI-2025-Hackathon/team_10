@@ -279,6 +279,12 @@ padding-left: 15px;
             </property>
             <item>
              <widget class="QLabel" name="image_label">
+              <property name="maximumSize">
+               <size>
+                <width>583</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -286,15 +292,6 @@ padding-left: 15px;
             </item>
             <item>
              <widget class="QFrame" name="frame_3">
-              <widget class="QWidget" name="verticalLayoutWidget_2">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>10</y>
-                 <width>551</width>
-                 <height>621</height>
-                </rect>
-               </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
                  <widget class="QtInteractor" name="three_D_plotter" native="true">
@@ -307,7 +304,6 @@ padding-left: 15px;
                  </widget>
                 </item>
                </layout>
-              </widget>
              </widget>
             </item>
             <item>
