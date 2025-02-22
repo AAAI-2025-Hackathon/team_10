@@ -253,8 +253,9 @@ class MainWindow(QMainWindow):
 
     def extract_features(self):
         print("Extracting features...")
-        features = classify_patient(self.patient_data)
-        print(features)
+        result = classify_patient(self.patient_data)
+        print(result)
+        print(f"Probability of epilepsy: {result['probability'][0]*100}%")
 
 
 if __name__ == "__main__":

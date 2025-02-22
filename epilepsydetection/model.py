@@ -115,17 +115,25 @@ def load_classifier():
         return None
 
 
-def classify_patient(input_array):
+def classify_patient(patient_data):
     """Classify patient using RF model."""
     try:
         classifier, scaler = load_classifier()
         if classifier is None:
             raise Exception("Failed to load classifier")
+        for scaler_name, input_name in zip(scaler.feature_names_in_, patient_data.columns):
+            print(f"{scaler_name}: {input_name} -> Same: {scaler_name == input_name}")
 
-        input_array = scaler.transform(input_array)
+        expected_features = scaler.feature_names_in_
+        reordered_data = patient_data.reindex(columns=expected_features)
 
-        prediction = classifier.predict(input_array)
-        probability = classifier.predict_proba(input_array)
+        missing_cols = [col for col in expected_features if col not in patient_data.columns]
+        if missing_cols:
+            raise Exception(f"Missing required features: {missing_cols}")
+        
+        transformed_data = scaler.transform(reordered_data)
+        prediction = classifier.predict(transformed_data)
+        probability = classifier.predict_proba(transformed_data)
 
         return {
             'prediction': prediction[0],
