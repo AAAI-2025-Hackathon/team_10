@@ -6,7 +6,7 @@ import sys
 from epilepsydetection import Ui_MainWindow
 from model import generate_mask
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, QThread, Signal
 from PySide6.QtGui import QPainter, QPixmap, QImage
 from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
@@ -271,11 +271,7 @@ class MainWindow(QMainWindow):
 
     
     def generate_mask(self):
-        if self.array_3d:
-            print("Generating mask...")
-            mask = generate_mask(self.array_3d)
-            self.load_mask(mask)
-        else:
+        if self.array_3d is None:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Mask generation failed")
@@ -283,6 +279,25 @@ class MainWindow(QMainWindow):
             msg.setWindowTitle("No MRI data loaded")
             msg.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
             msg.exec()
+            return
+
+        # Create and start the worker thread
+        self.mask_thread = MaskGeneratorThread(self.array_3d)
+        self.mask_thread.finished.connect(self.handle_mask_generation_complete)
+        self.mask_thread.error.connect(self.handle_mask_generation_error)
+        self.mask_thread.start()
+
+    def handle_mask_generation_complete(self, mask):
+        if mask is not None:
+            self.load_mask(mask)
+
+    def handle_mask_generation_error(self, error):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText("Mask generation failed")
+        msg.setInformativeText(str(error))
+        msg.setWindowTitle("Error")
+        msg.exec()
 
 
     def load_patient_data(self):
@@ -302,12 +317,7 @@ class MainWindow(QMainWindow):
 
 
     def extract_features(self):
-        if self.patient_data is not None:
-            print("Extracting features...")
-            result = classify_patient(self.patient_data)
-            probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
-            self.update_prediction_label(result['prediction'], probability)
-        else:
+        if self.patient_data is None:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Classification failed")
@@ -315,10 +325,32 @@ class MainWindow(QMainWindow):
             msg.setWindowTitle("No patient data loaded")
             msg.setWindowIcon(qta.icon(WINDOW_ICON_NAME, color="#164194"))
             msg.exec()
+            return
+        
+        print("Extracting features...")
+        result = classify_patient(self.patient_data)
+        probability = result['probability'][0]*100 if result['probability'][0] > result['probability'][1] else result['probability'][1]*100
+        self.update_prediction_label(result['prediction'], probability)            
 
     
     def update_prediction_label(self, prediction, probability):
         self.ui.patientPredictionLabel.setText(f"Diagnosis: {prediction} ({probability}%)")
+
+
+class MaskGeneratorThread(QThread):
+    finished = Signal(object)  # Signal to emit the result
+    error = Signal(str)        # Signal to emit errors
+
+    def __init__(self, array_3d):
+        super().__init__()
+        self.array_3d = array_3d
+
+    def run(self):
+        try:
+            mask = generate_mask(self.array_3d)
+            self.finished.emit(mask)
+        except Exception as e:
+            self.error.emit(str(e))
 
 
 if __name__ == "__main__":
