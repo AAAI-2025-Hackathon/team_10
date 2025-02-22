@@ -107,6 +107,8 @@ class MainWindow(QMainWindow):
 
 
     def planeChanged(self):
+        if self.volumes.data(self.volumes.index(0), Qt.DisplayRole) is None:
+            return
         index = self.ui.planeComboBox.currentIndex()
         self.slicing_axis = self.PLANES[index]
         self.update_combobox(self.ui.directionComboBox, PLANES_NORMALS_DIRECTIONS_NAMES[index])
