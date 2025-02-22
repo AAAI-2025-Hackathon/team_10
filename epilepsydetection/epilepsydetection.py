@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
-    QHBoxLayout, QLabel, QLayout, QListView,
-    QMainWindow, QPushButton, QSizePolicy, QSlider,
-    QSpacerItem, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+    QGroupBox, QHBoxLayout, QLabel, QLayout,
+    QListView, QMainWindow, QPushButton, QSizePolicy,
+    QSlider, QSpacerItem, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 from pyvistaqt.plotting import QtInteractor
 
@@ -110,6 +110,12 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "\n"
+"QtInteractor {\n"
+"    border: 1px solid #E0E0E0; /* Light gray border */\n"
+"    border-radius: 6px; /* Rounded corners */\n"
+"}\n"
+"\n"
+"\n"
 "\n"
 "/* Text Fields */\n"
 "QLineEdit, QTextEdit {\n"
@@ -133,7 +139,8 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QGroupBox {\n"
-"    background-color: #F9F9F9;\n"
+"    background-c"
+                        "olor: #F9F9F9;\n"
 "	padding: 5px;\n"
 "    border-radius: 6px;\n"
 "    font-size: 13pt;\n"
@@ -141,8 +148,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QGroupBox::title {\n"
-""
-                        "	padding: 20px;\n"
+"	padding: 20px;\n"
 "}\n"
 "\n"
 "QWebEngineView {\n"
@@ -233,24 +239,36 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.image_label)
 
-        self.three_D_plotter = QtInteractor(self.widget)
+        self.frame_3 = QFrame(self.widget)
+        self.frame_3.setObjectName(u"frame_3")
+        self.verticalLayoutWidget_2 = QWidget(self.frame_3)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(10, 10, 551, 621))
+        self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.three_D_plotter = QtInteractor(self.verticalLayoutWidget_2)
         self.three_D_plotter.setObjectName(u"three_D_plotter")
         self.three_D_plotter.setMinimumSize(QSize(25, 0))
 
-        self.horizontalLayout.addWidget(self.three_D_plotter)
+        self.verticalLayout_5.addWidget(self.three_D_plotter)
+
+
+        self.horizontalLayout.addWidget(self.frame_3)
 
         self.settingsWidget = QWidget(self.widget)
         self.settingsWidget.setObjectName(u"settingsWidget")
         self.settingsWidget.setMaximumSize(QSize(335, 16777215))
         self.verticalLayout_3 = QVBoxLayout(self.settingsWidget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.groupBox_3 = QGroupBox(self.settingsWidget)
         self.groupBox_3.setObjectName(u"groupBox_3")
-        self.groupBox_3.setMinimumSize(QSize(320, 350))
-        self.groupBox_3.setMaximumSize(QSize(320, 16777215))
+        self.groupBox_3.setMinimumSize(QSize(0, 350))
+        self.groupBox_3.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayoutWidget = QWidget(self.groupBox_3)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 261))
+        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 301, 261))
         self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
