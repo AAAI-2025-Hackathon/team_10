@@ -171,6 +171,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5 = QHBoxLayout(self.widget_2)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.gridLayout = QGridLayout()
+        self.gridLayout.setSpacing(6)
         self.gridLayout.setObjectName(u"gridLayout")
         self.uploadButton = QPushButton(self.widget_2)
         self.uploadButton.setObjectName(u"uploadButton")
@@ -184,11 +185,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.inferMaskButton, 1, 2, 1, 1)
 
-        self.uploadMaskButton = QPushButton(self.widget_2)
-        self.uploadMaskButton.setObjectName(u"uploadMaskButton")
-
-        self.gridLayout.addWidget(self.uploadMaskButton, 1, 1, 1, 1)
-
         self.loadPatientDataButton = QPushButton(self.widget_2)
         self.loadPatientDataButton.setObjectName(u"loadPatientDataButton")
 
@@ -196,11 +192,22 @@ class Ui_MainWindow(object):
 
         self.classifyPatientButton = QPushButton(self.widget_2)
         self.classifyPatientButton.setObjectName(u"classifyPatientButton")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.classifyPatientButton.sizePolicy().hasHeightForWidth())
+        self.classifyPatientButton.setSizePolicy(sizePolicy)
 
         self.gridLayout.addWidget(self.classifyPatientButton, 0, 1, 1, 1)
 
+        self.uploadMaskButton = QPushButton(self.widget_2)
+        self.uploadMaskButton.setObjectName(u"uploadMaskButton")
+
+        self.gridLayout.addWidget(self.uploadMaskButton, 1, 1, 1, 1)
+
         self.patientPredictionLabel = QLabel(self.widget_2)
         self.patientPredictionLabel.setObjectName(u"patientPredictionLabel")
+        self.patientPredictionLabel.setMaximumSize(QSize(16777215, 100))
 
         self.gridLayout.addWidget(self.patientPredictionLabel, 0, 2, 1, 1)
 
@@ -233,7 +240,7 @@ class Ui_MainWindow(object):
         self.groupBox_3.setMaximumSize(QSize(320, 16777215))
         self.verticalLayoutWidget = QWidget(self.groupBox_3)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 611))
+        self.verticalLayoutWidget.setGeometry(QRect(19, 69, 281, 551))
         self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -300,9 +307,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.uploadButton.setText(QCoreApplication.translate("MainWindow", u"Load brain MRI", None))
         self.inferMaskButton.setText(QCoreApplication.translate("MainWindow", u"AI generate mask", None))
-        self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
         self.loadPatientDataButton.setText(QCoreApplication.translate("MainWindow", u"Load Patient Data", None))
         self.classifyPatientButton.setText(QCoreApplication.translate("MainWindow", u"Predict Epilepsy", None))
+        self.uploadMaskButton.setText(QCoreApplication.translate("MainWindow", u"Load mask", None))
         self.patientPredictionLabel.setText(QCoreApplication.translate("MainWindow", u"Prediction", None))
         self.image_label.setText("")
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Volumes to show", None))
