@@ -44,9 +44,7 @@ class DictionaryModel(QAbstractListModel):
 
     def rowCount(self, parent=QModelIndex()):
         return len(self._data)
-
-    def flags(self, index):
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
+    
 
     def get_value(self, key):
         return self._data.get(key)
