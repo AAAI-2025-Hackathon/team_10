@@ -77,7 +77,7 @@ important: ideally, this should be run using the GPU, using the CPU is also poss
 
 1) create a new virtual environment using python 3.10 and install the dependencies in requirements.txt
 2) Run the main.py file to start the application.
-3) click on "load MRI" and from demo_data, select one MRI scan 
+3) click on "load brain MRI" and from demo_data, select one MRI scan 
        - e.g. control_4012_mri.nii.gz for a healthy person or
        - e.g. patient_1_mri.nii.gz for a patient with epilepsy
 4) you can then scroll through the MRI using the slider or rotate it by dragging the mouse on the image
@@ -88,7 +88,7 @@ important: ideally, this should be run using the GPU, using the CPU is also poss
 7) To show the resection mask (affected area of the brain) created by physicians, click "load mask" and select the corresponding file from the demo_data folder
        - e.g. mask.nii.gz for a patient with epilepsy
        - for healthy patients this does not exist
-8) To predict the resection mask based on the MRI scan, click "generate mask" and the model will make a prediction and display it in the 3D image viewer
+8) To predict the resection mask based on the MRI scan, click "AI generate mask" and the model will make a prediction and display it in the 3D image viewer
 
 
 
