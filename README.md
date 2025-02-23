@@ -30,8 +30,17 @@
 # Project Description
 This project applies machine learning to analyze MRI scans and clinical data from the [IDEAS dataset](https://doi.org/10.18112/openneuro.ds005602.v1.0.0). The application provides an interactive visualization of MRI data, enables epilepsy diagnosis based on key parameters, and predicts resection masks for epileptic patients.
 
+# Our Learnings
+As a team focused on language models, we had to stretch beyond our core expertise to tackle new challenges:
 
-# Repository structure
+- **Medical Datasets** – Navigating complex, sensitive data and adapting our workflows
+- **User Interfaces** – Building UIs from scratch to make our models accessible
+- **Computer Vision** – Applying vision models in a domain we hadn’t worked with before
+
+This experience pushed us out of our comfort zone, expanding our skills in new and valuable directions.
+
+
+# Repository Structure
 ```
 dataset/                   # Dataset files for training and testing
 demo_data/                 # Demo data for showcasing the application (id<4000: epileptic, id>4000: healthy)
@@ -47,7 +56,7 @@ notebooks/                 # Jupyter notebooks for data analysis and model train
 ```
 
 
-# Tech stack
+# Tech Stack
 
 ### Frontend:
 - [PySide6](https://pypi.org/project/PySide6/): Qt for Python framework for creating the UI
@@ -72,7 +81,7 @@ notebooks/                 # Jupyter notebooks for data analysis and model train
        -> The model and its results can be found in the notebooks/model_training.ipynb
 
 
-# Demo use case
+# Demo Use Case
 > :warning: important: ideally, this should be run using the GPU, using the CPU is also possible but the inference time will be longer. You can use conda to install some of the dependencies with GPU support, just use the alternative first step [here](#alternative-dependency-installation-step-with-gpu-support).
 
 1) Create a new virtual environment using python 3.12 and install the dependencies in `requirements.txt`.
@@ -108,7 +117,7 @@ pip install -r requirements.txt
 ```
 Continue with step 2. [above](#demo-use-case).
 
-# Data downloading
+# Data Downloading
 
 In this project we use the IDEAS (The Imaging Database for Epilepsy And Surgery) obtained from https://openneuro.org/datasets/ds005602/versions/1.0.0.
 
