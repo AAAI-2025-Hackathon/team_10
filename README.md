@@ -38,6 +38,20 @@ Instructions:
 # Project Description
 This project applies machine learning to analyze MRI scans and clinical data from the IDEAS dataset (doi:10.18112/openneuro.ds005602.v1.0.0), aiming to uncover patterns in brain structure related to drug-resistant focal epilepsy. By leveraging imaging and demographic data, we seek to improve lesion detection, identify biomarkers, and explore factors influencing surgical outcomes. Our approach combines deep learning and statistical modeling to enhance the understanding of epilepsy and support clinical decision-making.
 
+# Repository structure
+```
+dataset/                   # Dataset files for training and testing
+demo_data/                 # Demo data for showcasing the application
+epilepsydetection/         # Epilepsy detection application
+├── resources/             # Static resources (images, icons)
+├── create_empty_masks.py  # Script for creating empty masks
+├── dict_model.py          # Custom model for dictionary data
+├── epilepsydetection.py   # UI main window definition 
+├── epilepsydetection.ui   # UI layout file
+├── main.py                # Main application window and logic
+└── model.py               # ML model functions for loading and inference
+notebooks/                 # Jupyter notebooks for data analysis and model training pipelines
+```
 
 # Data downloading
 
@@ -53,6 +67,16 @@ sh ds005602-1.0.0.sh
 
 # Tech stack
 
+ ### Frontend:
+- PySide6: Qt for Python framework for creating the UI
+- QtAwesome: Icons from fontawesome
+- pyvistaqt: PyVista integration with Qt for 3D plotting
+
+### Backend:
+- nnunetv2: 3D medical image segmentation framework
+- Numpy: Fundamental package for scientific computing with Python
+- Pandas: Data manipulation and analysis tool
+- scikit-learn: Machine learning library for Python
 
 # Main features
 
