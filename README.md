@@ -75,7 +75,7 @@ notebooks/                 # Jupyter notebooks for data analysis and model train
 # Demo use case
 important: ideally, this should be run using the GPU, using the CPU is also possible but the inference time will be longer.
 
-1) create a new virtual environment using python 3.10 and install the dependencies in requirements.txt
+1) create a new virtual environment using python 3.12 and install the dependencies in requirements.txt
 2) Run the main.py file to start the application.
 3) click on "load brain MRI" and from demo_data, select one MRI scan 
        - e.g. control_4012_mri.nii.gz for a healthy person or
