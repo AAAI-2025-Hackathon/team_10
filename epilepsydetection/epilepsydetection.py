@@ -248,6 +248,14 @@ class Ui_MainWindow(object):
         self.three_D_plotter = QtInteractor(self.frame_3)
         self.three_D_plotter.setObjectName(u"three_D_plotter")
         self.three_D_plotter.setMinimumSize(QSize(25, 0))
+        self.three_D_plotter.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.spinner_label = QLabel(self.three_D_plotter)
+        self.spinner_label.setObjectName(u"spinner_label")
+        self.spinner_label.setGeometry(QRect(240, 30, 64, 64))
+        self.spinner_label.setMinimumSize(QSize(64, 64))
+        self.spinner_label.setMaximumSize(QSize(64, 64))
+        self.spinner_label.setStyleSheet(u"border-color: rgb(255, 255, 255);")
+        self.spinner_label.setMargin(0)
 
         self.verticalLayout_5.addWidget(self.three_D_plotter)
 
@@ -394,6 +402,7 @@ class Ui_MainWindow(object):
         self.loadPatientDataButton.setText(QCoreApplication.translate("MainWindow", u"Load Patient Data", None))
         self.patientPredictionLabel.setText(QCoreApplication.translate("MainWindow", u"Prediction", None))
         self.image_label.setText("")
+        self.spinner_label.setText("")
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Volumes to show", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Slicing plane", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Plane:", None))
