@@ -68,15 +68,15 @@ sh ds005602-1.0.0.sh
 # Tech stack
 
 ### Frontend:
-- PySide6: Qt for Python framework for creating the UI
-- QtAwesome: Icons from fontawesome
-- pyvistaqt: PyVista integration with Qt for 3D plotting
+- [PySide6](https://pypi.org/project/PySide6/): Qt for Python framework for creating the UI
+- [QtAwesome](https://pypi.org/project/QtAwesome/): Icons from fontawesome
+- [pyvistaqt](https://pypi.org/project/pyvistaqt/): PyVista integration with Qt for 3D plotting
 
 ### Backend:
-- nnunetv2: 3D medical image segmentation framework based on the nnUNet architecture
-- Numpy: Fundamental package for scientific computing with Python
-- Pandas: Data manipulation and analysis tool
-- scikit-learn: Machine learning library for Python
+- [nnunetv2](https://github.com/MIC-DKFZ/nnUNet/tree/master): 3D medical image segmentation framework based on the nnUNet architecture
+- [Numpy](https://pypi.org/project/numpy/): Fundamental package for scientific computing with Python
+- [Pandas](https://pandas.pydata.org/docs/index.html): Data manipulation and analysis tool
+- [scikit-learn](https://scikit-learn.org/stable/): Machine learning library for Python
 
 # Main features
 1) Brain MRI Visualization: View MRI scans with rotation and scroll through different planes (axial, sagittal, coronal) to explore the brain structure.
