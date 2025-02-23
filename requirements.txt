@@ -9,3 +9,4 @@ pandas
 scikit-learn
 seaborn
 nnunetv2
+huggingface_hub
