@@ -121,8 +121,20 @@ mv ds005602-1.0.0 dataset/
 
 This is only a part of the available dataset, we use some other parts as well, but those have to be obtained using a web browser. Please refer to the following links to download the other parts of the dataset:
 
-1. [freesurfer-orig](https://figshare.com/s/f13391a4161b807ce6b0?file=48485917) - MRI data normalized in dimensions and intensities. Downloads as a ZIP archive, you need to unzip it. You should unzip it into the dataset directory, so that it has this structure: `dataset/freesurfer_orig/freesurfer_orig/`: `1_freesurfer_orig.nii.gz`, `2_freesurfer_orig.nii.gz`, ...
-1. [masks](https://figshare.com/s/31ab43d1829b12ac13e8?file=46130973) - Binary resection masks in two versions - for the freesurfer normalized scans (`orig` and `brain` sets) and for the raw data (`ds005602-1.0.0` T1 set). Downloads as a ZIP archive, you need to unzip it. You should unzip it into the dataset directory, so that it has this structure: `dataset/masks/masks/`: `1/`: `1_MaskInOrig.nii.gz`, `1_MaskInRawData.nii.gz`; `2/`: `2_MaskInOrig.nii.gz`, `2_MaskInRawData.nii.gz`; ...
+1. [freesurfer-orig](https://figshare.com/s/f13391a4161b807ce6b0?file=48485917) - MRI data normalized in dimensions and intensities. Downloads as a ZIP archive, you need to unzip it. You should unzip it into the dataset directory, so that it has this structure:
+    - `dataset/freesurfer_orig/freesurfer_orig/`
+        - `1_freesurfer_orig.nii.gz`,
+        - `2_freesurfer_orig.nii.gz`,
+        - ...
+1. [masks](https://figshare.com/s/31ab43d1829b12ac13e8?file=46130973) - Binary resection masks in two versions - for the freesurfer normalized scans (`orig` and `brain` sets) and for the raw data (`ds005602-1.0.0` T1 set). Downloads as a ZIP archive, you need to unzip it. You should unzip it into the dataset directory, so that it has this structure:
+    - `dataset/masks/masks/`
+        - `1/`
+            - `1_MaskInOrig.nii.gz`,
+            - `1_MaskInRawData.nii.gz`
+        - `2/`
+            - `2_MaskInOrig.nii.gz`,
+            - `2_MaskInRawData.nii.gz`
+        - ...
 
 
 
