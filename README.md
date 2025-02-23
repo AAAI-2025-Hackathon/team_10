@@ -29,10 +29,10 @@ Instructions:
 
 - Title of your submission: **[EpilepsyMRI: Machine Learning for Epilepsy Analysis]**
 - Team Members: [Tobias Haar](mailto:tobias.haar@micronova.de), [Vignesh Gogulavasan](mailto:vignesh.gogulavasan@micronova.de), [Vojtech Brenik](mailto:vojtech.brenik@micronova.de), [Carolin Rickert](mailto:carolin.rickert@micronova.de)
-- [ ] All team members agree to abide by the [Hackathon Rules](https://aaai.org/conference/aaai/aaai-25/hackathon/)
-- [ ] This AAAI 2025 hackathon entry was created by the team during the period of the hackathon, February 17 – February 24, 2025
-- [ ] The entry includes a 2-minute maximum length demo video here: [Link](https://your-link.com)
-- [ ] The entry clearly identifies the selected theme in the README and the video.
+- [x] All team members agree to abide by the [Hackathon Rules](https://aaai.org/conference/aaai/aaai-25/hackathon/)
+- [x] This AAAI 2025 hackathon entry was created by the team during the period of the hackathon, February 17 – February 24, 2025
+- [x] The entry includes a 2-minute maximum length demo video here: [Link](https://your-link.com)
+- [x] The entry clearly identifies the selected theme in the README and the video.
 
 
 # Project Description
@@ -79,6 +79,9 @@ sh ds005602-1.0.0.sh
 - scikit-learn: Machine learning library for Python
 
 # Main features
+1) Brain MRI Visualization: View MRI scans with rotation and scroll through different planes (axial, sagittal, coronal) to explore the brain structure.
+2) Epilepsy Prediction: Based on specific parameters extracted from MRI scans, the model predicts whether a person has epilepsy or is healthy.
+3) Resection Mask Prediction: For epileptic patients, the model predicts the resection mask, indicating the area of the brain that may require surgical intervention.
 
 
 # Demo use case
