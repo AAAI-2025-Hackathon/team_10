@@ -5,9 +5,9 @@ from vtk import vtkCommand
 import sys
 from epilepsydetection import Ui_MainWindow
 from model import generate_mask
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
-from PySide6.QtCore import QSize, Qt, QThread, Signal
-from PySide6.QtGui import QPainter, QPixmap, QImage
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QLabel
+from PySide6.QtCore import QSize, Qt, QThread, Signal, QTimer
+from PySide6.QtGui import QPainter, QPixmap, QImage, QTransform
 from PySide6.QtSvg import QSvgRenderer
 import qtawesome as qta
 import nibabel as nib
@@ -42,6 +42,15 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event):
         self.resizeTabWidget()
+        # Update spinner position when window is resized
+        if hasattr(self, 'spinner_label'):
+            button_pos = self.ui.inferMaskButton.geometry()
+            self.spinner_label.setGeometry(
+                button_pos.right() + 10,
+                button_pos.top(),
+                32,
+                button_pos.height()
+            )
         return super().resizeEvent(event)
     
 
@@ -99,6 +108,20 @@ class MainWindow(QMainWindow):
         # Link comboBoxes signals to slots
         self.ui.planeComboBox.currentIndexChanged.connect(self.planeChanged)
         self.ui.directionComboBox.currentIndexChanged.connect(self.planeNormalDirectionChanged)
+
+        # Create and setup the spinner
+        self.ui.spinner_label.setAlignment(Qt.AlignCenter)
+        self.spinner_icon = qta.icon('fa5s.spinner', color='#164194')
+        self.ui.spinner_label.setPixmap(self.spinner_icon.pixmap(32, 32))
+        
+        # Create timer for rotation
+        self.rotation = 0
+        self.spinner_timer = QTimer(self)
+        self.spinner_timer.timeout.connect(self.rotate_spinner)
+        self.spinner_timer.setInterval(80)
+        
+        # Add to layout
+        self.ui.spinner_label.hide()
 
 
     def update_combobox(self, combobox, new_items):
@@ -186,7 +209,7 @@ class MainWindow(QMainWindow):
 
     def on_volume_check(self, top_left, bottom_right, roles):
         if Qt.CheckStateRole in roles:
-            index = top_left  # Assuming single item selection
+            index = top_left
             if self.volumes.data(index, Qt.CheckStateRole) == Qt.Checked:
                 volume = self.volumes.get_value(self.volumes.data(index, Qt.DisplayRole))
                 self.restore_volume_order()
@@ -258,7 +281,7 @@ class MainWindow(QMainWindow):
             self,
             "Select Image File",
             "",
-            "Image Files (*.nii *.nii.gz *.dcm);;All Files (*)"  # Adjust file types as needed
+            "Image Files (*.nii *.nii.gz *.dcm);;All Files (*)"
         )
         
         if file_path:
@@ -277,6 +300,24 @@ class MainWindow(QMainWindow):
         self.upload_file(model_type="mask")
 
     
+    def rotate_spinner(self):
+        self.rotation = (self.rotation + 30) % 360
+        transform = QTransform().rotate(self.rotation)
+        pixmap = self.spinner_icon.pixmap(32, 32)
+        self.ui.spinner_label.setPixmap(pixmap.transformed(transform, Qt.SmoothTransformation))
+
+    def show_spinner(self):
+        """Show the loading spinner."""
+        self.ui.spinner_label.show()
+        self.spinner_timer.start()
+        QApplication.processEvents()
+
+    def hide_spinner(self):
+        """Hide the loading spinner."""
+        self.spinner_timer.stop()
+        self.ui.spinner_label.hide()
+        QApplication.processEvents()
+
     def generate_mask(self):
         if self.array_3d is None:
             msg = QMessageBox()
@@ -288,17 +329,20 @@ class MainWindow(QMainWindow):
             msg.exec()
             return
 
-        # Create and start the worker thread
+        self.show_spinner()
+
         self.mask_thread = MaskGeneratorThread(self.array_3d)
         self.mask_thread.finished.connect(self.handle_mask_generation_complete)
         self.mask_thread.error.connect(self.handle_mask_generation_error)
         self.mask_thread.start()
 
     def handle_mask_generation_complete(self, mask):
+        self.hide_spinner()
         if mask is not None:
             self.load_mask(mask)
 
     def handle_mask_generation_error(self, error):
+        self.hide_spinner()
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText("Mask generation failed")
@@ -312,7 +356,7 @@ class MainWindow(QMainWindow):
             self,
             "Select Patient Data File",
             "",
-            "CSV Files (*.csv);;All Files (*)"  # Adjust file types as needed
+            "CSV Files (*.csv);;All Files (*)"
         )
         
         if file_path:
