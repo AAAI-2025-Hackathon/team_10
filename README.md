@@ -19,7 +19,7 @@
 
 # Check-In
 
-- Title of your submission: **[EpilepsyMRI: Machine Learning for Epilepsy Analysis]**
+- Title of your submission: **EpilepsyMRI: Machine Learning for Epilepsy Analysis**
 - Team Members: [Tobias Haar](mailto:tobias.haar@micronova.de), [Vignesh Gogulavasan](mailto:vignesh.gogulavasan@micronova.de), [Vojtěch Breník](mailto:vojtech.brenik@micronova.cz), [Carolin Rickert](mailto:carolin.rickert@micronova.de)
 - [x] All team members agree to abide by the [Hackathon Rules](https://aaai.org/conference/aaai/aaai-25/hackathon/)
 - [x] This AAAI 2025 hackathon entry was created by the team during the period of the hackathon, February 17 – February 24, 2025
