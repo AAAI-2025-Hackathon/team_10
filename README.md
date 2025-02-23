@@ -61,13 +61,13 @@ notebooks/                 # Jupyter notebooks for data analysis and model train
 - [scikit-learn](https://scikit-learn.org/stable/): Machine learning library for Python
 
 # Main features
-1) Brain MRI Visualization: View MRI scans with rotation and scroll through different planes (axial, sagittal, coronal) to explore the brain structure.
+1) **Brain MRI Visualization**: View MRI scans with rotation and scroll through different planes (axial, sagittal, coronal) to explore the brain structure.
        -> all preliminary analysis of the dataset can be found in the notebooks/data_analysis.ipynb
-2) Epilepsy Prediction: Based on specific parameters extracted from MRI scans, the model predicts whether a person has epilepsy or is healthy.
+2) **Epilepsy Prediction**: Based on specific parameters extracted from MRI scans, the model predicts whether a person has epilepsy or is healthy.
        -> For this purpose, 5 models were trained and tested: Gaussian Naive Bayes, Random Forest, Linear Regression,K Nearest Neighbors, and a simple Neural Network.
        -> Random Forest model was chosen as the best performing model.
        -> All models and their evaluation can be found in the notebooks/featurebased_prediction.ipynb
-3) Resection Mask Prediction: For epileptic patients, the model predicts the resection mask (area affected in the brain), indicating the area of the brain that may require surgical intervention.
+3) **Resection Mask Prediction**: For epileptic patients, the model predicts the resection mask (area affected in the brain), indicating the area of the brain that may require surgical intervention.
        -> For this purpose, a U-Net model was trained.
        -> The model and its results can be found in the notebooks/model_training.ipynb
 
