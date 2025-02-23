@@ -67,13 +67,13 @@ sh ds005602-1.0.0.sh
 
 # Tech stack
 
- ### Frontend:
+### Frontend:
 - PySide6: Qt for Python framework for creating the UI
 - QtAwesome: Icons from fontawesome
 - pyvistaqt: PyVista integration with Qt for 3D plotting
 
 ### Backend:
-- nnunetv2: 3D medical image segmentation framework
+- nnunetv2: 3D medical image segmentation framework based on the nnUNet architecture
 - Numpy: Fundamental package for scientific computing with Python
 - Pandas: Data manipulation and analysis tool
 - scikit-learn: Machine learning library for Python
