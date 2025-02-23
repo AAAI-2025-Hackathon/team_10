@@ -14,7 +14,7 @@ def download_checkpoint():
         # Create model directory if it doesn't exist
         MODEL_DIR.mkdir(parents=True, exist_ok=True)
         
-        checkpoint_path = MODEL_DIR / "nnUNetTrainer__nnUNetPlans__3d_fullres" / "fold_1" / "checkpoint_latest.pth"
+        checkpoint_path = MODEL_DIR / "nnUNetTrainer__nnUNetPlans__3d_fullres" / "fold_2" / "checkpoint_latest.pth"
         
         # Only download if file doesn't exist
         if not checkpoint_path.exists():
@@ -53,8 +53,8 @@ def generate_mask(input_array):
 
         predictor.initialize_from_trained_model_folder(
             model_training_output_dir=MODEL_DIR / "nnUNetTrainer__nnUNetPlans__3d_fullres",
-            use_folds=(1,),
-            checkpoint_name='checkpoint_latest.pth'
+            use_folds=(2,),
+            checkpoint_name='checkpoint_final.pth'
         )
 
         properties = {
