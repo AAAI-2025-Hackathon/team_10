@@ -16,14 +16,6 @@
 
 </pre>
 
-# Hackathon Template
-
-Instructions:
-1. This repository must be used as a template to create your teams' submission repository.
-2. The Check-In section must remain intact, and you must edit it to include your details. Please indicate agreement to the terms by makring the checklist with an `[x]`.
-3. The final demo video can be included as a file in the submission repository, or as a publicly accessible video on any website (e.g., Youtube).
-4. All other sections, including this, can be edited as you see fit - including removing these instructions for your submission.
-
 
 # Check-In
 
